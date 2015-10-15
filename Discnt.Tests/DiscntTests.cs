@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Discnt.Tests
@@ -7,7 +6,7 @@ namespace Discnt.Tests
     [TestClass]
     public class DiscntTests
     {
-        private const string Message = "Arrays mismatch!";
+        private const string ArraysMismatchMessage = "Arrays mismatch!";
 
         private int[] GetShuffledArray()
         {
@@ -60,8 +59,7 @@ namespace Discnt.Tests
             discnt.SelectionSort(shuffled);
 
             // Assert
-            Assert.IsTrue(shuffled.SequenceEqual(sorted), Message);
-            CollectionAssert.AreEquivalent(shuffled, sorted, Message);
+            Assert.IsTrue(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
         }
 
         [TestMethod]
@@ -76,8 +74,7 @@ namespace Discnt.Tests
             discnt.InsertionSort(shuffled);
 
             // Assert
-            Assert.IsTrue(shuffled.SequenceEqual(sorted), Message);
-            CollectionAssert.AreEquivalent(shuffled, sorted, Message);
+            Assert.IsTrue(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
         }
 
         [TestMethod]
@@ -92,8 +89,24 @@ namespace Discnt.Tests
             discnt.BubbleSort(shuffled);
 
             // Assert
-            Assert.IsTrue(shuffled.SequenceEqual(sorted), Message);
-            CollectionAssert.AreEquivalent(shuffled, sorted, Message);
+            Assert.IsTrue(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
+        }
+
+        [TestMethod]
+        public void GetMinPrice_Case1_ShouldEqual_10765P2()
+        {
+            // Assign
+            var discnt = new discnt.Discnt();
+            int[] prices = { 300, 499, 129, 237, 327, 900, 153, 987, 8765, 530, 1234 };
+            int discount = 30;
+
+            // Act
+            double result = discnt.GetMinPrice(prices, discount);
+
+            // Assert
+            double expected = 10765.20;
+            string errorMessage = $"Expected: {expected}, Actual: {result}";
+            Assert.AreEqual(expected, result, errorMessage);
         }
     }
 }

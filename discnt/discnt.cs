@@ -16,7 +16,7 @@ namespace discnt
             if (args == null || args.Length == 0)
             {
                 inputFileName = "discnt.in";
-                outputFileName = "discnt.in";
+                outputFileName = "discnt.out";
             }
             else if (args.Length == 2)
             {
@@ -37,7 +37,12 @@ namespace discnt
             var lines = File.ReadLines(inputFileName).ToArray();
             var prices = lines[0].Split(' ').Select(int.Parse).ToArray();
             int discount = int.Parse(lines[1]);
+            double result = GetMinPrice(prices, discount);
+            File.WriteAllText(outputFileName, result.ToString(CultureInfo.InvariantCulture));
+        }
 
+        internal double GetMinPrice(int[] prices, int discount)
+        {
             // input data is 10000 = 100^2 complexity at max
             // which is the comlexity of the algorithm O(N^2)
             // so suggestion is to use this one for less than 100 elements
@@ -51,8 +56,32 @@ namespace discnt
                 InsertionSort(prices);
             }
 
-            double result = Math.Round(2.1467, 2, MidpointRounding.ToEven);
-            File.WriteAllText(outputFileName, result.ToString(CultureInfo.InvariantCulture));
+            // get the top bound of number divisible by 3
+            int length = prices.Length / 3;
+            if (length > 0)
+            {
+                for (int i = 1; i < length; i++)
+                {
+                    Swap(prices, i * 3 - 1, prices.Length - i);
+                }
+            }
+
+            double discountMultiplier = 1 - discount/100.0;
+            double result = 0;
+
+            for (int i = 0; i < prices.Length; i++)
+            {
+                if (i%3 == 2)
+                {
+                    result += prices[i] * discountMultiplier;
+                }
+                else
+                {
+                    result += prices[i];
+                }
+            }
+
+            return Math.Round(result, 2, MidpointRounding.ToEven);
         }
 
         internal void SelectionSort(int[] array)
@@ -63,7 +92,7 @@ namespace discnt
 
                 for (int j = i + 1; j < array.Length; j++)
                 {
-                    if (IsGreater(array[i], array[j]))
+                    if (IsLesser(array[j], array[minIdex]))
                     {
                         minIdex = j;
                     }
@@ -79,7 +108,7 @@ namespace discnt
             {
                 for (int j = i; j > 0; j--)
                 {
-                    if (IsGreater(array[j], array[j - 1]))
+                    if (IsLesser(array[j], array[j - 1]))
                     {
                         Swap(array, j, j - 1);
                     }
@@ -97,7 +126,7 @@ namespace discnt
 
                 for (int i = 0; i < array.Length - 1; i++)
                 {
-                    if (IsGreater(array[i], array[i + 1]))
+                    if (IsLesser(array[i + 1], array[i]))
                     {
                         Swap(array, i, i + 1);
                         somethingSwapped = true;
@@ -106,16 +135,16 @@ namespace discnt
             }
         }
 
-        internal bool IsGreater(int left, int right)
+        internal bool IsLesser(int left, int right)
         {
-            return left > right;
+            return left < right;
         }
 
         internal void Swap(int[] array, int i, int j)
         {
             int temp = array[i];
-            array[i] = array[i + 1];
-            array[i + 1] = temp;
+            array[i] = array[j];
+            array[j] = temp;
         }
     }
 }
