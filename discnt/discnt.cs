@@ -38,7 +38,7 @@ namespace discnt
             var prices = lines[0].Split(' ').Select(int.Parse).ToArray();
             int discount = int.Parse(lines[1]);
             double result = GetMinPrice(prices, discount);
-            File.WriteAllText(outputFileName, result.ToString(CultureInfo.InvariantCulture));
+            File.WriteAllText(outputFileName, result.ToString("0.00", CultureInfo.InvariantCulture));
         }
 
         internal double GetMinPrice(int[] prices, int discount)

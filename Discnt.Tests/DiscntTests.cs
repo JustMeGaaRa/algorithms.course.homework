@@ -105,7 +105,7 @@ namespace Discnt.Tests
 
             // Assert
             double expected = 10765.20;
-            string errorMessage = $"Expected: {expected}, Actual: {result}";
+            string errorMessage = $"Expected: {expected:F}, Actual: {result:F}";
             Assert.AreEqual(expected, result, errorMessage);
         }
     }
