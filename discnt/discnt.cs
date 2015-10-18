@@ -43,26 +43,37 @@ namespace discnt
 
         internal double GetMinPrice(int[] prices, int discount)
         {
-            // input data is 10000 = 100^2 complexity at max
-            // which is the comlexity of the algorithm O(N^2)
-            // so suggestion is to use this one for less than 100 elements
-            // to not overhead the top complexity overall
-            if (prices.Length < 100)
+            if (prices.Length == 0)
+                return 0;
+
+            if (prices.Length == 1)
             {
-                SelectionSort(prices);
-            }
-            else
-            {
-                InsertionSort(prices);
+                return prices[0];
             }
 
-            // get the top bound of number divisible by 3
-            int length = prices.Length / 3;
-            if (length > 0)
+            if (prices.Length > 1)
             {
-                for (int i = 1; i <= length; i++)
+                // input data is 10000 = 100^2 complexity at max
+                // which is the comlexity of the algorithm O(N^2)
+                // so suggestion is to use this one for less than 100 elements
+                // to not overhead the top complexity overall
+                if (prices.Length < 100)
                 {
-                    Swap(prices, i * 3 - 1, prices.Length - i);
+                    SelectionSort(prices);
+                }
+                else
+                {
+                    InsertionSort(prices);
+                }
+
+                // get the top bound of number divisible by 3
+                int length = prices.Length / 3;
+                if (length > 0)
+                {
+                    for (int i = 1; i <= length; i++)
+                    {
+                        Swap(prices, i * 3 - 1, prices.Length - i);
+                    }
                 }
             }
 
