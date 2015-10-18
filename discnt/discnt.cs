@@ -60,7 +60,7 @@ namespace discnt
             int length = prices.Length / 3;
             if (length > 0)
             {
-                for (int i = 1; i < length; i++)
+                for (int i = 1; i <= length; i++)
                 {
                     Swap(prices, i * 3 - 1, prices.Length - i);
                 }
