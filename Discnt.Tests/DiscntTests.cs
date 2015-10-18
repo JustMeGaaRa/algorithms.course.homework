@@ -142,5 +142,39 @@ namespace Discnt.Tests
             string errorMessage = $"Expected: {expected:F}, Actual: {result:F}";
             Assert.AreEqual(expected, result, errorMessage);
         }
+
+        [TestMethod]
+        public void GetMinPrice_WithZeroPrices_ShouldEqual_Zero()
+        {
+            // Assign
+            var discnt = new discnt.Discnt();
+            int[] prices = { };
+            int discount = 30;
+
+            // Act
+            double result = discnt.GetMinPrice(prices, discount);
+
+            // Assert
+            double expected = 0;
+            string errorMessage = $"Expected: {expected:F}, Actual: {result:F}";
+            Assert.AreEqual(expected, result, errorMessage);
+        }
+
+        [TestMethod]
+        public void GetMinPrice_WithOnePrice_ShouldEqual_OnePrice()
+        {
+            // Assign
+            var discnt = new discnt.Discnt();
+            int[] prices = { 300 };
+            int discount = 30;
+
+            // Act
+            double result = discnt.GetMinPrice(prices, discount);
+
+            // Assert
+            double expected = 300;
+            string errorMessage = $"Expected: {expected:F}, Actual: {result:F}";
+            Assert.AreEqual(expected, result, errorMessage);
+        }
     }
 }
