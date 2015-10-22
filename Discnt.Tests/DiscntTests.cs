@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using discnt;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Discnt.Tests
@@ -51,12 +52,11 @@ namespace Discnt.Tests
         public void SelectionSort_ShouldSort()
         {
             // Assign
-            var discnt = new discnt.Discnt();
             var shuffled = GetShuffledArray();
             var sorted = GetSortedArray();
 
             // Act
-            discnt.SelectionSort(shuffled);
+            Arrays.SelectionSort(shuffled);
 
             // Assert
             Assert.IsTrue(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
@@ -66,12 +66,11 @@ namespace Discnt.Tests
         public void InsertionSort_ShouldSort()
         {
             // Assign
-            var discnt = new discnt.Discnt();
             var shuffled = GetShuffledArray();
             var sorted = GetSortedArray();
 
             // Act
-            discnt.InsertionSort(shuffled);
+            Arrays.InsertionSort(shuffled);
 
             // Assert
             Assert.IsTrue(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
@@ -81,19 +80,18 @@ namespace Discnt.Tests
         public void BubbleSort_ShouldSort()
         {
             // Assign
-            var discnt = new discnt.Discnt();
             var shuffled = GetShuffledArray();
             var sorted = GetSortedArray();
 
             // Act
-            discnt.BubbleSort(shuffled);
+            Arrays.BubbleSort(shuffled);
 
             // Assert
             Assert.IsTrue(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
         }
 
         [TestMethod]
-        public void GetMinPrice_With11Prices_ShouldEqual_10765P2()
+        public void GetMinPrice_With11Prices()
         {
             // Assign
             var discnt = new discnt.Discnt();
@@ -110,7 +108,7 @@ namespace Discnt.Tests
         }
 
         [TestMethod]
-        public void GetMinPrice_With10Prices_ShouldEqual_9631P4()
+        public void GetMinPrice_With10Prices()
         {
             // Assign
             var discnt = new discnt.Discnt();
@@ -127,7 +125,7 @@ namespace Discnt.Tests
         }
 
         [TestMethod]
-        public void GetMinPrice_With9Prices_ShouldEqual_9101P4()
+        public void GetMinPrice_With9Prices()
         {
             // Assign
             var discnt = new discnt.Discnt();
@@ -144,7 +142,7 @@ namespace Discnt.Tests
         }
 
         [TestMethod]
-        public void GetMinPrice_WithZeroPrices_ShouldEqual_Zero()
+        public void GetMinPrice_WithZeroPrices()
         {
             // Assign
             var discnt = new discnt.Discnt();
@@ -161,7 +159,7 @@ namespace Discnt.Tests
         }
 
         [TestMethod]
-        public void GetMinPrice_WithOnePrice_ShouldEqual_OnePrice()
+        public void GetMinPrice_WithOnePrice()
         {
             // Assign
             var discnt = new discnt.Discnt();
@@ -173,6 +171,57 @@ namespace Discnt.Tests
 
             // Assert
             double expected = 300;
+            string errorMessage = $"Expected: {expected:F}, Actual: {result:F}";
+            Assert.AreEqual(expected, result, errorMessage);
+        }
+
+        [TestMethod]
+        public void GetMinPrice_Case1()
+        {
+            // Assign
+            var discnt = new discnt.Discnt();
+            int[] prices = { 50, 20, 30, 17, 100 };
+            int discount = 10;
+
+            // Act
+            double result = discnt.GetMinPrice(prices, discount);
+
+            // Assert
+            double expected = 207;
+            string errorMessage = $"Expected: {expected:F}, Actual: {result:F}";
+            Assert.AreEqual(expected, result, errorMessage);
+        }
+
+        [TestMethod]
+        public void GetMinPrice_Case2()
+        {
+            // Assign
+            var discnt = new discnt.Discnt();
+            int[] prices = { 1, 2, 3, 4, 5, 6, 7 };
+            int discount = 100;
+
+            // Act
+            double result = discnt.GetMinPrice(prices, discount);
+
+            // Assert
+            double expected = 15;
+            string errorMessage = $"Expected: {expected:F}, Actual: {result:F}";
+            Assert.AreEqual(expected, result, errorMessage);
+        }
+
+        [TestMethod]
+        public void GetMinPrice_Case3()
+        {
+            // Assign
+            var discnt = new discnt.Discnt();
+            int[] prices = { 1, 1, 1 };
+            int discount = 33;
+
+            // Act
+            double result = discnt.GetMinPrice(prices, discount);
+
+            // Assert
+            double expected = 2.67;
             string errorMessage = $"Expected: {expected:F}, Actual: {result:F}";
             Assert.AreEqual(expected, result, errorMessage);
         }
