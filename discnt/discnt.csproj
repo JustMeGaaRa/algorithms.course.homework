@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arrays.cs" />
     <Compile Include="Discnt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
