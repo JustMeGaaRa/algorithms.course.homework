@@ -59,7 +59,7 @@ namespace discnt
                 }
                 else
                 {
-                    Arrays.InsertionSort(prices);
+                    Arrays.MergeSort(prices);
                 }
             }
 
@@ -68,18 +68,28 @@ namespace discnt
             int length = prices.Length;
             int fullPart = length / 3;
 
-            for (int i = 0; i < fullPart; i++)
+            if (discount == 0)
             {
-                var index = i * 3;
-                Arrays.Swap(prices, index + 2, length - i - 1);
-                result += prices[index];
-                result += prices[index + 1];
-                result += prices[index + 2] * discountMultiplier;
+                for (int i = 0; i < length; i++)
+                {
+                    result += prices[i];
+                }
             }
-
-            for (int i = fullPart*3; i < length; i++)
+            else
             {
-                result += prices[i];
+                for (int i = 0; i < fullPart; i++)
+                {
+                    var index = i * 3;
+                    Arrays.Swap(prices, index + 2, length - i - 1);
+                    result += prices[index];
+                    result += prices[index + 1];
+                    result += prices[index + 2] * discountMultiplier;
+                }
+
+                for (int i = fullPart * 3; i < length; i++)
+                {
+                    result += prices[i];
+                }
             }
 
             return Math.Round(result, 2, MidpointRounding.ToEven);
