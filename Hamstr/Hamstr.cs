@@ -67,7 +67,16 @@ namespace Hamstr
                 Arrays.MergeSort(hamstersArray);
             }
 
-            return 0;
+            int total = 0;
+            int hamstersFed = 0;
+
+            while (total <= foodSupplies)
+            {
+                total += hamstersArray[hamstersFed].Consumes;
+                hamstersFed++;
+            }
+
+            return hamstersFed;
         }
     }
 }
