@@ -103,5 +103,19 @@ namespace Discnt.Tests
             // Assert
             Assert.IsTrue(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
         }
+
+        [TestMethod]
+        public void QuickSort_WithInputShuffledArray_ShouldBeSorted()
+        {
+            // Assign
+            var shuffled = GetShuffledArray();
+            var sorted = GetSortedArray();
+
+            // Act
+            Arrays.QuickSort(shuffled);
+
+            // Assert
+            Assert.IsTrue(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
+        }
     }
 }
