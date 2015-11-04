@@ -7,8 +7,8 @@
     <ProjectGuid>{DAD8906B-5DE4-42A7-8296-BCA8A9EFBBFD}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Hamstr</RootNamespace>
-    <AssemblyName>Hamstr</AssemblyName>
+    <RootNamespace>hamstr</RootNamespace>
+    <AssemblyName>hamstr</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

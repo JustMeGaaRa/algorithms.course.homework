@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "discnt", "discnt\discnt.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Discnt.Tests", "Discnt.Tests\Discnt.Tests.csproj", "{4CC91FB9-68A5-447B-B50A-9AAA52EECFF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hamstr", "Hamstr\Hamstr.csproj", "{DAD8906B-5DE4-42A7-8296-BCA8A9EFBBFD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hamstr", "hamstr\hamstr.csproj", "{DAD8906B-5DE4-42A7-8296-BCA8A9EFBBFD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hamstr.Tests", "Hamstr.Tests\Hamstr.Tests.csproj", "{F5A2E7B5-8E53-4FAF-850C-9E03FFF2CC72}"
 EndProject
