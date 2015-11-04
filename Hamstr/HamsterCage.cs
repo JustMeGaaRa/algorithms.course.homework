@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using discnt;
 
-namespace Hamstr
+namespace hamstr
 {
     public class HamsterCage
     {
@@ -26,12 +27,11 @@ namespace Hamstr
             get { return _hamsters.CurrentSize; }
         }
 
-        public Hamster AddHamster(int portion, int greed)
+        public void AddHamster(Hamster hamster)
         {
-            var hamster = new Hamster(portion, greed, this);
+            hamster.Cage = this;
             _hamsters.Add(hamster);
             RecalculateConsumption();
-            return hamster;
         }
 
         public Hamster RemoveHamster()
@@ -41,9 +41,14 @@ namespace Hamstr
             return hamster;
         }
 
-        public int FeedHamsters()
+        public int FeedHamsters(IEnumerable<Hamster> hamsters)
         {
-            while (_consume > FoodSupplies)
+            foreach (var hamster in hamsters)
+            {
+                AddHamster(hamster);
+            }
+
+            while (Consume > FoodSupplies)
             {
                 RemoveHamster();
             }
