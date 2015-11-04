@@ -63,7 +63,7 @@ namespace discnt
                 }
             }
 
-            double discountMultiplier = 1 - discount/100.0;
+            double discountMultiplier = 1 - discount / 100.0;
             double result = 0;
             int length = prices.Length;
             int fullPart = length / 3;

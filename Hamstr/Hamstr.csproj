@@ -39,6 +39,9 @@
     <Compile Include="..\discnt\Arrays.cs">
       <Link>Arrays.cs</Link>
     </Compile>
+    <Compile Include="..\discnt\DataStructures.cs">
+      <Link>DataStructures.cs</Link>
+    </Compile>
     <Compile Include="Hamster.cs" />
     <Compile Include="Hamstr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
