@@ -180,5 +180,74 @@ namespace Hamstr.Tests
             var errorMessage = $"Expected: {expected}, Actual: {result}";
             Assert.AreEqual(expected, result, errorMessage);
         }
+
+        [TestMethod]
+        public void FeedHamster_Case9()
+        {
+            // Assign
+            int foodSupplies = 1000000000;
+            int hamsterCount = 10;
+            var hamsters = new List<Hamster>();
+            var cage = new HamsterCage(foodSupplies, hamsterCount);
+
+            for (int i = 0; i < hamsterCount; i++)
+            {
+                hamsters.Add(new Hamster(1000000000, 1000000000));
+            }
+
+            // Act
+            int result = cage.FeedHamsters(hamsters);
+
+            // Assert
+            int expected = 1;
+            var errorMessage = $"Expected: {expected}, Actual: {result}";
+            Assert.AreEqual(expected, result, errorMessage);
+        }
+
+        [TestMethod]
+        public void FeedHamster_Case10()
+        {
+            // Assign
+            int foodSupplies = 1000000000;
+            int hamsterCount = 1000;
+            var hamsters = new List<Hamster>();
+            var cage = new HamsterCage(foodSupplies, hamsterCount);
+
+            for (int i = 0; i < hamsterCount; i++)
+            {
+                hamsters.Add(new Hamster(100000000, 1));
+            }
+
+            // Act
+            int result = cage.FeedHamsters(hamsters);
+
+            // Assert
+            int expected = 9;
+            var errorMessage = $"Expected: {expected}, Actual: {result}";
+            Assert.AreEqual(expected, result, errorMessage);
+        }
+
+        [TestMethod]
+        public void FeedHamster_Case11()
+        {
+            // Assign
+            int foodSupplies = 1000000000;
+            int hamsterCount = 1;
+            var hamsters = new List<Hamster>();
+            var cage = new HamsterCage(foodSupplies, hamsterCount);
+
+            for (int i = 0; i < hamsterCount; i++)
+            {
+                hamsters.Add(new Hamster(0, 1));
+            }
+
+            // Act
+            int result = cage.FeedHamsters(hamsters);
+
+            // Assert
+            int expected = 1;
+            var errorMessage = $"Expected: {expected}, Actual: {result}";
+            Assert.AreEqual(expected, result, errorMessage);
+        }
     }
 }

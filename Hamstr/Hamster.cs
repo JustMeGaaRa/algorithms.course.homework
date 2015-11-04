@@ -10,13 +10,13 @@ namespace hamstr
             Greed = greed;
         }
 
-        public int Portion { get; }
+        public long Portion { get; }
 
-        public int Greed { get; }
+        public long Greed { get; }
 
         public HamsterCage Cage { get; set; }
 
-        public int Consumes
+        public long Consumes
         {
             get { return Portion + Greed * (Cage.HamstersCount - 1); }
         }
