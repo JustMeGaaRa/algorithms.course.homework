@@ -15,14 +15,14 @@ namespace hamstr
             _hamsters = new DataStructures.BinaryMaxHeap<Hamster>(initialHamstersCount);
         }
 
-        public int FoodSupplies { get; set; }
+        public long FoodSupplies { get; set; }
 
         public long Consume
         {
             get { return _consume; }
         }
 
-        public int HamstersCount
+        public long HamstersCount
         {
             get { return _hamsters.CurrentSize; }
         }

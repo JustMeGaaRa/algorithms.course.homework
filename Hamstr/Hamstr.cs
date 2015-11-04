@@ -41,7 +41,7 @@ namespace hamstr
                 int foodSupplies = int.Parse(lines[0]);
 
                 // 1 <= C <= 100 000
-                int hamsterCount = int.Parse(lines[0]);
+                int hamsterCount = int.Parse(lines[1]);
 
                 var cage = new HamsterCage(foodSupplies, hamsterCount);
 
