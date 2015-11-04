@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arrays.cs" />
-    <Compile Include="DataStructures.cs" />
     <Compile Include="Discnt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
