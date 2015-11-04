@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DAD8906B-5DE4-42A7-8296-BCA8A9EFBBFD}</ProjectGuid>
+    <ProjectGuid>{D5D2A73F-E426-4FCB-8768-D24F4BF64C15}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>hamstr</RootNamespace>
@@ -34,6 +34,12 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\discnt\Arrays.cs">
@@ -44,7 +50,7 @@
     </Compile>
     <Compile Include="Hamster.cs" />
     <Compile Include="HamsterCage.cs" />
-    <Compile Include="Hamstr.cs" />
+    <Compile Include="hamstr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
