@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace Hamstr
+namespace hamstr
 {
     public class Hamstr
     {
@@ -35,27 +35,25 @@ namespace Hamstr
         {
             try
             {
-                var lines = File.ReadLines(inputFileName).ToList().GetEnumerator();
+                var lines = File.ReadLines(inputFileName).ToArray();
 
                 // 0 <= S <= 1 000 000 000
-                lines.MoveNext();
-                int foodSupplies = int.Parse(lines.Current);
+                int foodSupplies = int.Parse(lines[0]);
 
                 // 1 <= C <= 100 000
-                lines.MoveNext();
-                int hamsterCount = int.Parse(lines.Current);
+                int hamsterCount = int.Parse(lines[0]);
 
                 var cage = new HamsterCage(foodSupplies, hamsterCount);
 
-                while (lines.MoveNext())
+                var hamsters = lines.Skip(2).Select(line =>
                 {
-                    var numbers = lines.Current.Split(' ');
+                    var numbers = line.Split(' ');
                     int h = int.Parse(numbers[0]);
                     int g = int.Parse(numbers[1]);
-                    cage.AddHamster(h, g);
-                }
+                    return new Hamster(h, g);
+                });
 
-                var result = cage.FeedHamsters();
+                var result = cage.FeedHamsters(hamsters);
                 File.WriteAllText(outputFileName, result.ToString());
             }
             catch (Exception ex)

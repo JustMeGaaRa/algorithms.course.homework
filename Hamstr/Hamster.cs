@@ -1,14 +1,11 @@
 ﻿using System;
 
-namespace Hamstr
+namespace hamstr
 {
     public class Hamster : IComparable<Hamster>
     {
-        private readonly HamsterCage _cage;
-
-        public Hamster(int portion, int greed, HamsterCage cage)
+        public Hamster(int portion, int greed)
         {
-            _cage = cage;
             Portion = portion;
             Greed = greed;
         }
@@ -17,9 +14,11 @@ namespace Hamstr
 
         public int Greed { get; }
 
+        public HamsterCage Cage { get; set; }
+
         public int Consumes
         {
-            get { return Portion + Greed*(_cage.HamstersCount - 1); }
+            get { return Portion + Greed * (Cage.HamstersCount - 1); }
         }
 
         public int CompareTo(Hamster other)
