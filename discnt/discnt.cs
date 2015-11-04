@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace discnt
 {
-    internal class Discnt
+    public class Discnt
     {
         private static void Main(string[] args)
         {
@@ -32,7 +32,7 @@ namespace discnt
             discnt.Run(inputFileName, outputFileName);
         }
 
-        internal void Run(string inputFileName, string outputFileName)
+        public void Run(string inputFileName, string outputFileName)
         {
             var lines = File.ReadLines(inputFileName).ToArray();
             var prices = lines[0].Split(' ').Select(int.Parse).ToArray();
@@ -41,7 +41,7 @@ namespace discnt
             File.WriteAllText(outputFileName, result.ToString("0.00", CultureInfo.InvariantCulture));
         }
 
-        internal double GetMinPrice(int[] prices, int discount)
+        public double GetMinPrice(int[] prices, int discount)
         {
             if (prices.Length == 0)
                 return 0;

@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "discnt", "discnt\discnt.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Discnt.Tests", "Discnt.Tests\Discnt.Tests.csproj", "{4CC91FB9-68A5-447B-B50A-9AAA52EECFF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hamstr", "Hamstr\Hamstr.csproj", "{DAD8906B-5DE4-42A7-8296-BCA8A9EFBBFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hamstr.Tests", "Hamstr.Tests\Hamstr.Tests.csproj", "{F5A2E7B5-8E53-4FAF-850C-9E03FFF2CC72}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{4CC91FB9-68A5-447B-B50A-9AAA52EECFF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CC91FB9-68A5-447B-B50A-9AAA52EECFF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CC91FB9-68A5-447B-B50A-9AAA52EECFF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAD8906B-5DE4-42A7-8296-BCA8A9EFBBFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAD8906B-5DE4-42A7-8296-BCA8A9EFBBFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAD8906B-5DE4-42A7-8296-BCA8A9EFBBFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAD8906B-5DE4-42A7-8296-BCA8A9EFBBFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5A2E7B5-8E53-4FAF-850C-9E03FFF2CC72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5A2E7B5-8E53-4FAF-850C-9E03FFF2CC72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5A2E7B5-8E53-4FAF-850C-9E03FFF2CC72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5A2E7B5-8E53-4FAF-850C-9E03FFF2CC72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

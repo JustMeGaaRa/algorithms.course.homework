@@ -1,20 +1,27 @@
+using System;
+
 namespace discnt
 {
     public static class Arrays
     {
-        public static bool IsLesser(int left, int right)
+        public static void Swap<T>(T[] array, int i, int j)
         {
-            return left < right;
-        }
-
-        public static void Swap(int[] array, int i, int j)
-        {
-            int temp = array[i];
+            T temp = array[i];
             array[i] = array[j];
             array[j] = temp;
         }
 
-        public static void SelectionSort(int[] array)
+        public static void Shuffle<T>(T[] array)
+        {
+            var random = new Random();
+            for (int i = 0; i < array.Length; i++)
+            {
+                int randomIndex = random.Next(array.Length);
+                Swap(array, i, randomIndex);
+            }
+        }
+
+        public static void SelectionSort<T>(T[] array) where T : IComparable<T>
         {
             for (int i = 0; i < array.Length - 1; i++)
             {
@@ -22,7 +29,7 @@ namespace discnt
 
                 for (int j = i + 1; j < array.Length; j++)
                 {
-                    if (IsLesser(array[j], array[minIdex]))
+                    if (array[j].CompareTo(array[minIdex]) == -1)
                     {
                         minIdex = j;
                     }
@@ -32,13 +39,13 @@ namespace discnt
             }
         }
 
-        public static void InsertionSort(int[] array)
+        public static void InsertionSort<T>(T[] array) where T : IComparable<T>
         {
             for (int i = 1; i < array.Length; i++)
             {
                 for (int j = i; j > 0; j--)
                 {
-                    if (IsLesser(array[j], array[j - 1]))
+                    if (array[j].CompareTo(array[j - 1]) == -1)
                     {
                         Swap(array, j, j - 1);
                     }
@@ -46,7 +53,7 @@ namespace discnt
             }
         }
 
-        public static void BubbleSort(int[] array)
+        public static void BubbleSort<T>(T[] array) where T : IComparable<T>
         {
             bool somethingSwapped = true;
 
@@ -56,7 +63,7 @@ namespace discnt
 
                 for (int i = 0; i < array.Length - 1; i++)
                 {
-                    if (IsLesser(array[i + 1], array[i]))
+                    if (array[i + 1].CompareTo(array[i]) == -1)
                     {
                         Swap(array, i, i + 1);
                         somethingSwapped = true;
@@ -65,13 +72,13 @@ namespace discnt
             }
         }
 
-        public static void MergeSort(int[] array)
+        public static void MergeSort<T>(T[] array) where T : IComparable<T>
         {
-            int[] mergeArray = new int[array.Length];
+            T[] mergeArray = new T[array.Length];
             InternalMergeSort(array, mergeArray, 0, array.Length - 1);
         }
 
-        private static void InternalMergeSort(int[] array, int[] mergeArray, int begin, int end)
+        private static void InternalMergeSort<T>(T[] array, T[] mergeArray, int begin, int end) where T : IComparable<T>
         {
             if (begin < end)
             {
@@ -82,7 +89,7 @@ namespace discnt
             }
         }
 
-        private static void Merge(int[] array, int[] mergeArray, int begin, int middle, int end)
+        private static void Merge<T>(T[] array, T[] mergeArray, int begin, int middle, int end) where T : IComparable<T>
         {
             int firstBegin = begin;
             int firstEnd = middle - 1;
@@ -91,7 +98,7 @@ namespace discnt
 
             while (firstBegin <= firstEnd && secondBegin <= end)
             {
-                if (IsLesser(array[firstBegin], array[secondBegin]))
+                if (array[firstBegin].CompareTo(array[secondBegin]) == -1)
                 {
                     mergeArray[mergeIndex] = array[firstBegin];
                     firstBegin++;
@@ -123,6 +130,50 @@ namespace discnt
             {
                 array[i] = mergeArray[i];
             }
+        }
+
+        public static void QuickSort<T>(T[] array) where T : IComparable<T>
+        {
+            Shuffle(array);
+            InternalQuickSort(array, 0, array.Length - 1);
+        }
+
+        private static void InternalQuickSort<T>(T[] array, int begin, int end) where T : IComparable<T>
+        {
+            if (begin >= end)
+                return;
+
+            int pivotIndex = Partition(array, begin, end);
+
+            if (begin < pivotIndex - 1)
+                InternalQuickSort(array, begin, pivotIndex - 1);
+
+            if (pivotIndex < end)
+                InternalQuickSort(array, pivotIndex + 1, end);
+        }
+
+        private static int Partition<T>(T[] array, int begin, int end) where T : IComparable<T>
+        {
+            T pivot = array[begin];
+            int leftIndex = begin + 1;
+            int rightIndex = end;
+
+            while (true)
+            {
+                while (array[leftIndex].CompareTo(pivot) < 0 && leftIndex < end)
+                    leftIndex++;
+
+                while (array[rightIndex].CompareTo(pivot) >= 0 && rightIndex > begin)
+                    rightIndex--;
+
+                if (leftIndex >= rightIndex)
+                    break;
+
+                Swap(array, leftIndex, rightIndex);
+            }
+
+            Swap(array, rightIndex, begin);
+            return rightIndex;
         }
     }
 }
