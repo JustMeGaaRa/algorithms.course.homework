@@ -43,6 +43,7 @@
       <Link>DataStructures.cs</Link>
     </Compile>
     <Compile Include="Hamster.cs" />
+    <Compile Include="HamsterCage.cs" />
     <Compile Include="Hamstr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
