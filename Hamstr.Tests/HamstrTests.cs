@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Hamstr.Tests
 {
     [TestClass]
-    public class HamsterCageTests
+    public class HamstrTests
     {
         [TestMethod]
         public void FeedHamster_Case1()
