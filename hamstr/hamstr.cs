@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -43,14 +44,15 @@ namespace hamstr
                 // 1 <= C <= 100 000
                 int hamsterCount = int.Parse(lines[1]);
 
-                DataStructures.BinaryMaxHeap<Hamster> hamsters = new DataStructures.BinaryMaxHeap<Hamster>(hamsterCount);
-                for (int i = 2; i < hamsterCount; i++)
+                //BinaryHeap<Hamster> hamsters = new BinaryHeap<Hamster>(hamsterCount);
+                var hamsters = new Hamster[hamsterCount];
+                for (int i = 2; i < hamsterCount + 2; i++)
                 {
                     var numbers = lines[i].Split(' ');
                     int h = int.Parse(numbers[0]);
                     int g = int.Parse(numbers[1]);
                     var hamster = new Hamster(h, g, hamsterCount - 1);
-                    hamsters.Add(hamster);
+                    hamsters[i - 2] = hamster;
                 }
 
                 var result = FeedHamsters(foodSupplies, hamsters);
@@ -62,28 +64,28 @@ namespace hamstr
             }
         }
 
-        public int FeedHamsters(int foodSupplies, DataStructures.BinaryMaxHeap<Hamster> hamsters)
+        public int FeedHamsters(int foodSupplies, Hamster[] hamsters)
         {
             long consumedTotal = 0;
             long greedSoFar = 0;
             int hamstersCount = 0;
-            var hamster = hamsters.GetEnumerator();
+            Arrays.MergeSort(hamsters);
 
-            while (hamster.MoveNext())
+            while (hamstersCount < hamsters.Length)
             {
-                long currentHamsterConsumes = hamster.Current.GetConsumption(hamstersCount);
+                long currentHamsterConsumes = hamsters[hamstersCount].GetConsumption(hamstersCount);
                 long consumptionTotalIfAdded = consumedTotal + greedSoFar + currentHamsterConsumes;
 
                 if (consumptionTotalIfAdded > foodSupplies)
                     break;
 
                 consumedTotal = consumptionTotalIfAdded;
-                greedSoFar += hamster.Current.Greed;
+                greedSoFar += hamsters[hamstersCount].Greed;
                 hamstersCount++;
             }
 
             Console.WriteLine($"Food supplies: {foodSupplies}");
-            Console.WriteLine($"Hamsters count: {hamsters.CurrentSize}");
+            Console.WriteLine($"Hamsters count: {hamsters.Length}");
             Console.WriteLine($"Hamsters fed: {hamstersCount}");
             Console.WriteLine($"Food consumed: {consumedTotal}");
 

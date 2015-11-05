@@ -5,12 +5,14 @@ namespace hamstr
     public class Hamster : IComparable<Hamster>
     {
         private readonly int _mates;
+        private readonly long _consumeTotal;
 
         public Hamster(int portion, int greed, int mates)
         {
-            _mates = mates;
             Portion = portion;
             Greed = greed;
+            _mates = mates;
+            _consumeTotal = GetConsumption(_mates);
         }
 
         public long Portion { get; }
@@ -24,10 +26,10 @@ namespace hamstr
 
         public int CompareTo(Hamster other)
         {
-            if (GetConsumption(_mates) < other.GetConsumption(_mates))
+            if (_consumeTotal < other._consumeTotal)
                 return -1;
 
-            if (GetConsumption(_mates) > other.GetConsumption(_mates))
+            if (_consumeTotal > other._consumeTotal)
                 return 1;
 
             return 0;

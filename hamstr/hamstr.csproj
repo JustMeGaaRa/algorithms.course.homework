@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataStructures.cs" />
+    <Compile Include="Arrays.cs" />
     <Compile Include="Hamster.cs" />
     <Compile Include="hamstr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
