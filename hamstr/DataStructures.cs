@@ -109,7 +109,7 @@ namespace hamstr
 
             private int GetBestIndex(int index1, int index2)
             {
-                bool item1IsBetter = _items[index1].CompareTo(_items[index2]) > 0;
+                bool item1IsBetter = _items[index1].CompareTo(_items[index2]) < 0;
                 return item1IsBetter ? index1 : index2;
             }
 

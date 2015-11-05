@@ -43,23 +43,51 @@ namespace hamstr
                 // 1 <= C <= 100 000
                 int hamsterCount = int.Parse(lines[1]);
 
-                var cage = new HamsterCage(foodSupplies, hamsterCount);
-
-                var hamsters = lines.Skip(2).Select(line =>
+                DataStructures.BinaryMaxHeap<Hamster> hamsters = new DataStructures.BinaryMaxHeap<Hamster>(hamsterCount);
+                for (int i = 2; i < hamsterCount; i++)
                 {
-                    var numbers = line.Split(' ');
+                    var numbers = lines[i].Split(' ');
                     int h = int.Parse(numbers[0]);
                     int g = int.Parse(numbers[1]);
-                    return new Hamster(h, g);
-                });
+                    var hamster = new Hamster(h, g, hamsterCount - 1);
+                    hamsters.Add(hamster);
+                }
 
-                var result = cage.FeedHamsters(hamsters);
+                var result = FeedHamsters(foodSupplies, hamsters);
                 File.WriteAllText(outputFileName, result.ToString());
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
+        }
+
+        public int FeedHamsters(int foodSupplies, DataStructures.BinaryMaxHeap<Hamster> hamsters)
+        {
+            long consumedTotal = 0;
+            long greedSoFar = 0;
+            int hamstersCount = 0;
+            var hamster = hamsters.GetEnumerator();
+
+            while (hamster.MoveNext())
+            {
+                long currentHamsterConsumes = hamster.Current.GetConsumption(hamstersCount);
+                long consumptionTotalIfAdded = consumedTotal + greedSoFar + currentHamsterConsumes;
+
+                if (consumptionTotalIfAdded > foodSupplies)
+                    break;
+
+                consumedTotal = consumptionTotalIfAdded;
+                greedSoFar += hamster.Current.Greed;
+                hamstersCount++;
+            }
+
+            Console.WriteLine($"Food supplies: {foodSupplies}");
+            Console.WriteLine($"Hamsters count: {hamsters.CurrentSize}");
+            Console.WriteLine($"Hamsters fed: {hamstersCount}");
+            Console.WriteLine($"Food consumed: {consumedTotal}");
+
+            return hamstersCount;
         }
     }
 }
