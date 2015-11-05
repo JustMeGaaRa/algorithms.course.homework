@@ -79,16 +79,12 @@ namespace discnt
             {
                 for (int i = 0; i < fullPart; i++)
                 {
-                    var index = i * 3;
-                    Arrays.Swap(prices, index + 2, length - i - 1);
-                    result += prices[index];
-                    result += prices[index + 1];
-                    result += prices[index + 2] * discountMultiplier;
+                    result += prices[length - i - 1] * discountMultiplier;
                 }
 
-                for (int i = fullPart * 3; i < length; i++)
+                for (int i = fullPart; i < length; i++)
                 {
-                    result += prices[i];
+                    result += prices[length - i - 1];
                 }
             }
 
