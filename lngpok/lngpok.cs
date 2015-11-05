@@ -8,6 +8,27 @@ namespace lngpok
     {
         private static void Main(string[] args)
         {
+            var lngpok = new Lngpok();
+            string inputFileName;
+            string outputFileName;
+
+            if (args == null || args.Length == 0)
+            {
+                inputFileName = "lngpok.in";
+                outputFileName = "lngpok.out";
+            }
+            else if (args.Length == 2)
+            {
+                inputFileName = args[0];
+                outputFileName = args[1];
+            }
+            else
+            {
+                Console.WriteLine("Command line parameters violation!");
+                return;
+            }
+
+            lngpok.Run(inputFileName, outputFileName);
         }
 
         public void Run(string inputFileName, string outputFileName)
