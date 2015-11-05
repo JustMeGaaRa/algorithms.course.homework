@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F5A2E7B5-8E53-4FAF-850C-9E03FFF2CC72}</ProjectGuid>
+    <ProjectGuid>{28D50F94-2C4E-4CCC-AD77-7376CC141C8C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Hamstr.Tests</RootNamespace>
-    <AssemblyName>Hamstr.Tests</AssemblyName>
+    <RootNamespace>Lngpok.Tests</RootNamespace>
+    <AssemblyName>Lngpok.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -50,13 +50,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="HamstrTests.cs" />
+    <Compile Include="LngpokTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\hamstr\hamstr.csproj">
-      <Project>{d5d2a73f-e426-4fcb-8768-d24f4bf64c15}</Project>
-      <Name>hamstr</Name>
+    <ProjectReference Include="..\lngpok\lngpok.csproj">
+      <Project>{331B6D4D-0C0A-46C2-880E-7E4424AD7D1F}</Project>
+      <Name>lngpok</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

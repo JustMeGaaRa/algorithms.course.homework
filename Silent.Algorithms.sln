@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hamstr", "Hamstr\Hamstr.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hamstr.Tests", "Hamstr.Tests\Hamstr.Tests.csproj", "{F5A2E7B5-8E53-4FAF-850C-9E03FFF2CC72}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lngpok", "lngpok\lngpok.csproj", "{331B6D4D-0C0A-46C2-880E-7E4424AD7D1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lngpok.Tests", "Lngpok.Tests\Lngpok.Tests.csproj", "{28D50F94-2C4E-4CCC-AD77-7376CC141C8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{F5A2E7B5-8E53-4FAF-850C-9E03FFF2CC72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5A2E7B5-8E53-4FAF-850C-9E03FFF2CC72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5A2E7B5-8E53-4FAF-850C-9E03FFF2CC72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{331B6D4D-0C0A-46C2-880E-7E4424AD7D1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{331B6D4D-0C0A-46C2-880E-7E4424AD7D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{331B6D4D-0C0A-46C2-880E-7E4424AD7D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{331B6D4D-0C0A-46C2-880E-7E4424AD7D1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28D50F94-2C4E-4CCC-AD77-7376CC141C8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28D50F94-2C4E-4CCC-AD77-7376CC141C8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28D50F94-2C4E-4CCC-AD77-7376CC141C8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28D50F94-2C4E-4CCC-AD77-7376CC141C8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
