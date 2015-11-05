@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -43,23 +44,52 @@ namespace hamstr
                 // 1 <= C <= 100 000
                 int hamsterCount = int.Parse(lines[1]);
 
-                var cage = new HamsterCage(foodSupplies, hamsterCount);
-
-                var hamsters = lines.Skip(2).Select(line =>
+                //BinaryHeap<Hamster> hamsters = new BinaryHeap<Hamster>(hamsterCount);
+                var hamsters = new Hamster[hamsterCount];
+                for (int i = 2; i < hamsterCount + 2; i++)
                 {
-                    var numbers = line.Split(' ');
+                    var numbers = lines[i].Split(' ');
                     int h = int.Parse(numbers[0]);
                     int g = int.Parse(numbers[1]);
-                    return new Hamster(h, g);
-                });
+                    var hamster = new Hamster(h, g, hamsterCount - 1);
+                    hamsters[i - 2] = hamster;
+                }
 
-                var result = cage.FeedHamsters(hamsters);
+                var result = FeedHamsters(foodSupplies, hamsters);
                 File.WriteAllText(outputFileName, result.ToString());
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
+        }
+
+        public int FeedHamsters(int foodSupplies, Hamster[] hamsters)
+        {
+            long consumedTotal = 0;
+            long greedSoFar = 0;
+            int hamstersCount = 0;
+            Arrays.MergeSort(hamsters);
+
+            while (hamstersCount < hamsters.Length)
+            {
+                long currentHamsterConsumes = hamsters[hamstersCount].GetConsumption(hamstersCount);
+                long consumptionTotalIfAdded = consumedTotal + greedSoFar + currentHamsterConsumes;
+
+                if (consumptionTotalIfAdded > foodSupplies)
+                    break;
+
+                consumedTotal = consumptionTotalIfAdded;
+                greedSoFar += hamsters[hamstersCount].Greed;
+                hamstersCount++;
+            }
+
+            Console.WriteLine($"Food supplies: {foodSupplies}");
+            Console.WriteLine($"Hamsters count: {hamsters.Length}");
+            Console.WriteLine($"Hamsters fed: {hamstersCount}");
+            Console.WriteLine($"Food consumed: {consumedTotal}");
+
+            return hamstersCount;
         }
     }
 }
