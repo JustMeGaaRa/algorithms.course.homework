@@ -6,30 +6,29 @@ namespace Common.DataStructures
 {
     public class BinaryHeap<TKey> : IEnumerable<TKey> where TKey : IComparable<TKey>
     {
-        private readonly TKey[] _items;
+        private readonly BinaryHeapOrder _binaryHeapOrder;
+        private readonly List<TKey> _items;
 
-        public BinaryHeap(int capacity)
+        public BinaryHeap(BinaryHeapOrder binaryHeapOrder, int capacity)
         {
-            _items = new TKey[capacity];
+            _binaryHeapOrder = binaryHeapOrder;
+            _items = new List<TKey>(capacity);
         }
 
-        public int CurrentSize { get; private set; }
+        public int Count
+        {
+            get { return _items.Count; }
+        }
 
         public void Add(TKey item)
         {
-            if (CurrentSize == _items.Length)
-            {
-                throw new InvalidOperationException("Heap capacity exceeded. Cannot add new item.");
-            }
-
-            _items[CurrentSize] = item;
-            CurrentSize++;
-            BubbleUp(CurrentSize - 1);
+            _items.Add(item);
+            BubbleUp(Count - 1);
         }
 
         public TKey Peek()
         {
-            if (CurrentSize == 0)
+            if (Count == 0)
             {
                 throw new InvalidOperationException("Cannot peek when the heap is empty.");
             }
@@ -39,14 +38,14 @@ namespace Common.DataStructures
 
         public TKey Remove()
         {
-            if (CurrentSize == 0)
+            if (Count == 0)
             {
                 throw new InvalidOperationException("Cannot remove when the heap is empty.");
             }
 
             TKey min = _items[0];
-            Swap(0, CurrentSize - 1);
-            CurrentSize--;
+            Swap(0, Count - 1);
+            _items.RemoveAt(_items.Count - 1);
             BubbleDown(0);
 
             return min;
@@ -54,7 +53,7 @@ namespace Common.DataStructures
 
         public IEnumerator<TKey> GetEnumerator()
         {
-            for (int i = 0; i < CurrentSize; i++)
+            for (int i = 0; i < Count; i++)
             {
                 yield return _items[i];
             }
@@ -105,7 +104,18 @@ namespace Common.DataStructures
 
         private int GetBestIndex(int index1, int index2)
         {
-            bool item1IsBetter = _items[index1].CompareTo(_items[index2]) < 0;
+            bool item1IsBetter = false;
+
+            switch (_binaryHeapOrder)
+            {
+                case BinaryHeapOrder.Minimum:
+                    item1IsBetter = _items[index1].CompareTo(_items[index2]) < 0;
+                    break;
+                case BinaryHeapOrder.Maximum:
+                    item1IsBetter = _items[index1].CompareTo(_items[index2]) > 0;
+                    break;
+            }
+
             return item1IsBetter ? index1 : index2;
         }
 
@@ -129,7 +139,7 @@ namespace Common.DataStructures
 
         private bool ItemExists(int index)
         {
-            return index < CurrentSize;
+            return index < Count;
         }
 
         private void Swap(int index1, int index2)
@@ -153,5 +163,11 @@ namespace Common.DataStructures
         {
             return 2 * parentIndex + 2;
         }
+    }
+
+    public enum BinaryHeapOrder
+    {
+        Minimum,
+        Maximum
     }
 }
