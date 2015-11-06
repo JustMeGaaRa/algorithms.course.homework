@@ -1,6 +1,6 @@
 using System;
 
-namespace hamstr
+namespace Common
 {
     public static class Arrays
     {

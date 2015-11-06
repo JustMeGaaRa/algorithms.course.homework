@@ -54,9 +54,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\hamstr\hamstr.csproj">
-      <Project>{d5d2a73f-e426-4fcb-8768-d24f4bf64c15}</Project>
-      <Name>hamstr</Name>
+    <ProjectReference Include="..\Hamstr\Hamstr.csproj">
+      <Project>{DAD8906B-5DE4-42A7-8296-BCA8A9EFBBFD}</Project>
+      <Name>Hamstr</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

@@ -42,6 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Common\Arrays.cs">
+      <Link>Arrays.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\BinaryHeap.cs">
+      <Link>BinaryHeap.cs</Link>
+    </Compile>
     <Compile Include="lngpok.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -49,6 +55,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(SolutionDir)Common\Arrays.cs" "$(ProjectDir)" /Y /R
+xcopy "$(SolutionDir)Common\BinaryHeap.cs" "$(ProjectDir)" /Y /R</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
