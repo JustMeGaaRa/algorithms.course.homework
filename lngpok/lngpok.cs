@@ -39,7 +39,7 @@ namespace lngpok
                 // line = [0, 1 000 000]
                 // lines count = [0, 10 000]
                 var line = File.ReadLines(inputFileName).First();
-                var values = line.Split(' ').Select(int.Parse).ToArray();
+                var values = line.Split(' ').Select(int.Parse);
                 var result = GetMaxStreak(values);
                 File.WriteAllText(outputFileName, result.ToString());
             }
@@ -49,7 +49,7 @@ namespace lngpok
             }
         }
 
-        public int GetMaxStreak(int[] values)
+        public int GetMaxStreak(IEnumerable<int> values)
         {
             int zerosCount = 0;
             var streaksList = new List<Streak>();
@@ -67,15 +67,21 @@ namespace lngpok
                 }
             }
 
+            var valuesIterator = sortedSet.GetEnumerator();
+            valuesIterator.MoveNext();
+            var previousValue = valuesIterator.Current;
+            var firstStreak = new Streak { ZerosLeft = zerosCount, StartValue = valuesIterator.Current };
+            streaksList.Add(firstStreak);
+
             if (sortedSet.Count == 0)
             {
                 return zerosCount;
             }
 
-            var valuesIterator = sortedSet.GetEnumerator();
-            valuesIterator.MoveNext();
-            var previousValue = valuesIterator.Current;
-            streaksList.Add(new Streak { ZerosLeft = zerosCount, StartValue = valuesIterator.Current });
+            if (sortedSet.Count == 1)
+            {
+                firstStreak.EndValue = valuesIterator.Current;
+            }
 
             while (valuesIterator.MoveNext())
             {
