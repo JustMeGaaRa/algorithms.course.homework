@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Common.Algorithms;
 
 namespace lngpok
 {
@@ -51,7 +51,82 @@ namespace lngpok
 
         public int GetMaxStreak(int[] values)
         {
-            return 0;
+            int zerosCount = 0;
+            var streaksList = new List<Streak>();
+            var sortedSet = new SortedSet<int>();
+
+            foreach (var value in values)
+            {
+                if (value == 0)
+                {
+                    zerosCount++;
+                }
+                else
+                {
+                    sortedSet.Add(value);
+                }
+            }
+
+            if (sortedSet.Count == 0)
+            {
+                return zerosCount;
+            }
+
+            var valuesIterator = sortedSet.GetEnumerator();
+            valuesIterator.MoveNext();
+            var previousValue = valuesIterator.Current;
+            streaksList.Add(new Streak { ZerosLeft = zerosCount, StartValue = valuesIterator.Current });
+
+            while (valuesIterator.MoveNext())
+            {
+                int missingValuesGap = valuesIterator.Current - previousValue - 1;
+                int streaksCount = streaksList.Count;
+
+                if (missingValuesGap > 0)
+                {
+                    streaksList.Add(new Streak { ZerosLeft = zerosCount, StartValue = valuesIterator.Current });
+                }
+                
+                for (int index = 0; index < streaksCount; index++)
+                {
+                    var streak = streaksList[index];
+
+                    if (!streak.IsSealed)
+                    {
+                        if (streak.ZerosLeft >= missingValuesGap)
+                        {
+                            streak.ZerosLeft -= missingValuesGap;
+                        }
+                        else
+                        {
+                            streak.EndValue = previousValue;
+                            streak.IsSealed = true;
+                        }
+
+                        streak.EndValue = missingValuesGap == 0 ? valuesIterator.Current : previousValue;
+                    }
+                }
+
+                previousValue = valuesIterator.Current;
+            }
+
+            return streaksList.Max(x => x.GetValue());
+        }
+
+        private class Streak
+        {
+            public int ZerosLeft { get; set; }
+
+            public int StartValue { get; set; }
+
+            public int EndValue { get; set; }
+
+            public bool IsSealed { get; set; }
+
+            public int GetValue()
+            {
+                return EndValue - StartValue + ZerosLeft + 1;
+            }
         }
     }
 }
