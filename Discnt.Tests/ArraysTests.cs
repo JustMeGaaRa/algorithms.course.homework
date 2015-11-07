@@ -1,5 +1,5 @@
 using System.Linq;
-using discnt;
+using Common.Algorithms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Discnt.Tests

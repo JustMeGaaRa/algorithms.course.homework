@@ -143,21 +143,23 @@ namespace Hamstr.Tests
         public void FeedHamster_Case7()
         {
             // Assign
-            int foodSupplies = 1000000000;
+            int foodSupplies = 20000;
             int hamsterCount = 10;
             var hamsters = new List<Hamster>(hamsterCount);
             var cage = new hamstr.Hamstr();
+            hamsters.Add(new Hamster(1, 5000, hamsterCount));
+            hamsters.Add(new Hamster(1, 5000, hamsterCount));
 
-            for (int i = 0; i < hamsterCount; i++)
+            for (int i = 0; i < hamsterCount - 2; i++)
             {
-                hamsters.Add(new Hamster(0, 0, hamsterCount));
+                hamsters.Add(new Hamster(10000, 1, hamsterCount));
             }
 
             // Act
             int result = cage.FeedHamsters(foodSupplies, hamsters.ToArray());
 
             // Assert
-            int expected = 10;
+            int expected = 2;
             var errorMessage = $"Expected: {expected}, Actual: {result}";
             Assert.AreEqual(expected, result, errorMessage);
         }
