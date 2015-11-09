@@ -6,13 +6,29 @@ namespace Common.DataStructures
 {
     public class BinaryHeap<TKey> : IEnumerable<TKey> where TKey : IComparable<TKey>
     {
-        private readonly BinaryHeapOrder _binaryHeapOrder;
+        private readonly IComparer<TKey> _comparer;
         private readonly List<TKey> _items;
 
-        public BinaryHeap(BinaryHeapOrder binaryHeapOrder, int capacity)
+        public BinaryHeap(bool minimum, int capacity, IComparer<TKey> comparer)
         {
-            _binaryHeapOrder = binaryHeapOrder;
             _items = new List<TKey>(capacity);
+
+            if (comparer != null)
+            {
+                _comparer = comparer;
+            }
+            else if(minimum)
+            {
+                _comparer = new GreaterComparer<TKey>();
+            }
+            else
+            {
+                _comparer = new LesserComparer<TKey>();
+            }
+        }
+
+        public BinaryHeap(bool minimum, int capacity) : this(minimum, capacity, null)
+        {
         }
 
         public int Count
@@ -104,19 +120,7 @@ namespace Common.DataStructures
 
         private int GetBestIndex(int index1, int index2)
         {
-            bool item1IsBetter = false;
-
-            switch (_binaryHeapOrder)
-            {
-                case BinaryHeapOrder.Minimum:
-                    item1IsBetter = _items[index1].CompareTo(_items[index2]) < 0;
-                    break;
-                case BinaryHeapOrder.Maximum:
-                    item1IsBetter = _items[index1].CompareTo(_items[index2]) > 0;
-                    break;
-            }
-
-            return item1IsBetter ? index1 : index2;
+            return _comparer.Compare(_items[index1], _items[index2]) < 0 ? index1 : index2;
         }
 
         private int GetBestChildIndex(int parentIndex)
@@ -151,23 +155,33 @@ namespace Common.DataStructures
 
         private int GetParentIndex(int childIndex)
         {
-            return (childIndex - 1) / 2;
+            return (childIndex - 1)/2;
         }
 
         private int GetLeftChildIndex(int parentIndex)
         {
-            return 2 * parentIndex + 1;
+            return 2*parentIndex + 1;
         }
 
         private int GetRightChildIndex(int parentIndex)
         {
-            return 2 * parentIndex + 2;
+            return 2*parentIndex + 2;
         }
-    }
 
-    public enum BinaryHeapOrder
-    {
-        Minimum,
-        Maximum
+        private class GreaterComparer<T> : IComparer<T> where T : IComparable<T>
+        {
+            public int Compare(T x, T y)
+            {
+                return x.CompareTo(y);
+            }
+        }
+
+        private class LesserComparer<T> : IComparer<T> where T : IComparable<T>
+        {
+            public int Compare(T x, T y)
+            {
+                return x.CompareTo(y) * -1;
+            }
+        }
     }
 }

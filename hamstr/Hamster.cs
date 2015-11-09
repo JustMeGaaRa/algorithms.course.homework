@@ -26,14 +26,16 @@ namespace hamstr
 
         public int CompareTo(Hamster other)
         {
-            return _consumeTotal.CompareTo(other._consumeTotal);
+            //return GetConsumption(1).CompareTo(other.GetConsumption(1));
 
-            //int result = Portion.CompareTo(other.Portion);
+            //return _consumeTotal.CompareTo(other._consumeTotal);
 
-            //if (result == 0)
-            //    return other.Greed.CompareTo(Greed);
+            int result = Portion.CompareTo(other.Portion);
 
-            //return result;
+            if (result == 0)
+                return other.Greed.CompareTo(Greed);
+
+            return result;
         }
 
         public override string ToString()
