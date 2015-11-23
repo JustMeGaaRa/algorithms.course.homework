@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Common.Algorithms;
-using Common.DataStructures;
 
 namespace hamstr
 {
     public class Hamstr
     {
-        private BinaryHeap<Hamster> _hamstersHeap;
-        private List<Hamster> _hamstersList;
-
         private static void Main(string[] args)
         {
             var hamstr = new Hamstr();
@@ -89,38 +84,13 @@ namespace hamstr
                 // check if adding next hamster will fit the food supplies
                 if (totallyConsumedlIfAdded > foodSupplies)
                 {
-                    //var firstHamsterAdded = _hamstersList.FirstOrDefault();
-                    //var nextHamsterToAdd = hamsters[hamstersCount];
-                    //if (firstHamsterAdded != null && nextHamsterToAdd != null)
-                    //{
-                    //    // check if removing the hamster that consumes the most
-                    //    // and adding next hamsterwill reduce the total consumption
-                    //    long firstHamserConsumes = firstHamsterAdded.GetConsumption(hamstersCount);
-                    //    long nextHamsterWillConsume = nextHamsterToAdd.GetConsumption(hamstersCount);
-
-                    //    // check if first added consumes more that next one
-                    //    // and if it is better to replace him with next one
-                    //    if (firstHamserConsumes > nextHamsterWillConsume)
-                    //    {
-                    //        consumedTotal = consumedTotal - firstHamsterAdded.GetConsumption(hamstersCount - 1) + nextHamsterToAdd.GetConsumption(hamstersCount - 1);
-                    //        greedSoFar = greedSoFar - firstHamsterAdded.Greed + nextHamsterToAdd.Greed;
-                    //        continue;
-                    //    }
-                    //}
-
                     break;
                 }
 
                 consumedTotal = totallyConsumedlIfAdded;
                 greedSoFar += hamsters[hamstersCount].Greed;
-                //_hamstersList.Add(hamsters[hamstersCount]);
                 hamstersCount++;
             }
-
-            Console.WriteLine($"Food supplies: {foodSupplies}");
-            Console.WriteLine($"Hamsters count: {hamsters.Length}");
-            Console.WriteLine($"Hamsters fed: {hamstersCount}");
-            Console.WriteLine($"Food consumed: {consumedTotal}");
 
             return hamstersCount;
         }
