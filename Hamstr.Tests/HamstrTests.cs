@@ -20,7 +20,7 @@ namespace Hamstr.Tests
             hamsters.Add(new Hamster(3, 1, hamsterCount));
 
             // Act
-            int result = cage.FeedHamsters(foodSupplies, hamsterCount, hamsters);
+            int result = cage.FeedHamsters(foodSupplies, hamsters.ToArray());
 
             // Assert
             int expected = 2;
@@ -42,7 +42,7 @@ namespace Hamstr.Tests
             hamsters.Add(new Hamster(5, 1, hamsterCount));
 
             // Act
-            int result = cage.FeedHamsters(foodSupplies, hamsterCount, hamsters);
+            int result = cage.FeedHamsters(foodSupplies, hamsters.ToArray());
 
             // Assert
             int expected = 3;
@@ -62,7 +62,7 @@ namespace Hamstr.Tests
             hamsters.Add(new Hamster(1, 60000, hamsterCount));
 
             // Act
-            int result = cage.FeedHamsters(foodSupplies, hamsterCount, hamsters);
+            int result = cage.FeedHamsters(foodSupplies, hamsters.ToArray());
 
             // Assert
             int expected = 1;
@@ -85,7 +85,7 @@ namespace Hamstr.Tests
             hamsters.Add(new Hamster(1, 0, hamsterCount));
 
             // Act
-            int result = cage.FeedHamsters(foodSupplies, hamsterCount, hamsters);
+            int result = cage.FeedHamsters(foodSupplies, hamsters.ToArray());
 
             // Assert
             int expected = 5;
@@ -108,7 +108,7 @@ namespace Hamstr.Tests
             }
 
             // Act
-            int result = cage.FeedHamsters(foodSupplies, hamsterCount, hamsters);
+            int result = cage.FeedHamsters(foodSupplies, hamsters.ToArray());
 
             // Assert
             int expected = 5;
@@ -131,7 +131,7 @@ namespace Hamstr.Tests
             }
 
             // Act
-            int result = cage.FeedHamsters(foodSupplies, hamsterCount, hamsters);
+            int result = cage.FeedHamsters(foodSupplies, hamsters.ToArray());
 
             // Assert
             int expected = 10;
@@ -156,7 +156,7 @@ namespace Hamstr.Tests
             }
 
             // Act
-            int result = cage.FeedHamsters(foodSupplies, hamsterCount, hamsters);
+            int result = cage.FeedHamsters(foodSupplies, hamsters.ToArray());
 
             // Assert
             int expected = 2;
@@ -175,7 +175,7 @@ namespace Hamstr.Tests
             hamsters.Add(new Hamster(10, 0, hamsterCount));
 
             // Act
-            int result = cage.FeedHamsters(foodSupplies, hamsterCount, hamsters);
+            int result = cage.FeedHamsters(foodSupplies, hamsters.ToArray());
 
             // Assert
             int expected = 0;
@@ -198,7 +198,7 @@ namespace Hamstr.Tests
             }
 
             // Act
-            int result = cage.FeedHamsters(foodSupplies, hamsterCount, hamsters);
+            int result = cage.FeedHamsters(foodSupplies, hamsters.ToArray());
 
             // Assert
             int expected = 1;
@@ -221,7 +221,7 @@ namespace Hamstr.Tests
             }
 
             // Act
-            int result = cage.FeedHamsters(foodSupplies, hamsterCount, hamsters);
+            int result = cage.FeedHamsters(foodSupplies, hamsters.ToArray());
 
             // Assert
             int expected = 9;
@@ -244,7 +244,7 @@ namespace Hamstr.Tests
             }
 
             // Act
-            int result = cage.FeedHamsters(foodSupplies, hamsterCount, hamsters);
+            int result = cage.FeedHamsters(foodSupplies, hamsters.ToArray());
 
             // Assert
             int expected = 31623;
