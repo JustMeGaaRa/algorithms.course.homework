@@ -3,6 +3,8 @@ using System.Linq;
 
 namespace Common.DataStructures
 {
+    using System;
+
     public static class GraphExtensions
     {
         public static IEnumerable<Vertex> BreadthFirstSearch(this Graph graph, Vertex startVertex, Vertex endVertex)
@@ -59,6 +61,33 @@ namespace Common.DataStructures
             }
 
             return result;
+        }
+
+        public static IEnumerable<Vertex> Dijkstra(this Graph graph, Vertex startVertex)
+        {
+            const int INFINITY = int.MaxValue;
+            var distnaces = graph.Vertices.ToDictionary(vertex => vertex.Label, vertex => INFINITY);
+            var path = new HashSet<Vertex>();
+            var visit = graph.Vertices.ToList();
+
+            //while (visit.Count > 0)
+            //{
+            //    var shortestDistanceVertex = visit[0];
+
+            //    for (int i = 0; i < visit.Count; i++)
+            //    {
+            //        if (distnaces[visit[i].Label] < distnaces[shortestDistanceVertex.Label])
+            //        {
+            //            shortestDistanceVertex = visit[i];
+            //        }
+            //    }
+
+            //    visit.Remove(shortestDistanceVertex);
+
+
+            //}
+
+            return path;
         }
     }
 }
