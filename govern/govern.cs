@@ -5,6 +5,8 @@ namespace govern
 {
     using System.IO;
 
+    using Common.DataStructures;
+
     public class Govern
     {
         private static void Main(string[] args)
@@ -35,8 +37,8 @@ namespace govern
         public void Run(string inputFileName, string outputFileName)
         {
             var lines = File.ReadAllLines(inputFileName);
-            int count = int.Parse(lines[0]);
-            var keys = lines.Skip(1).ToArray();
+            var graph = new Graph();
+            graph.Parse(lines);
 
             var result = 0;
             File.WriteAllText(outputFileName, result.ToString());

@@ -27,12 +27,12 @@ namespace Common.DataStructures
             var vertices = new Dictionary<string, Vertex>();
             var edges = new HashSet<Edge>();
 
-            for (int i = 0; i < vectexCount; i++)
+            for (int i = 1; i <= vectexCount; i++)
             {
                 var label = i.ToString();
                 vertices.Add(label, new Vertex(label));
             }
-            
+
             for (int i = 0; i < edgeCount; i++)
             {
                 var labels = lines[i + 2].Split(' ');
@@ -51,6 +51,19 @@ namespace Common.DataStructures
 
             Vertices = new HashSet<Vertex>(vertices.Values);
             Edges = new HashSet<Edge>(edges);
+        }
+
+        public bool AddVertex(Vertex vertex)
+        {
+            return Vertices.Add(vertex);
+        }
+
+        public bool AddEdge(Edge edge)
+        {
+            if (Vertices.Contains(edge.StartVertex) || Vertices.Contains(edge.EndVertex))
+                return false;
+
+            return Edges.Add(edge);
         }
     }
 }

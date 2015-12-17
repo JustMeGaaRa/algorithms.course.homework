@@ -2,7 +2,7 @@ using System.Linq;
 using Common.Algorithms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Discnt.Tests
+namespace CommonTests
 {
     [TestClass]
     public class ArraysTests

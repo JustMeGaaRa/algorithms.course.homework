@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="ArraysTests.cs" />
     <Compile Include="EdgeTests.cs" />
+    <Compile Include="GraphExtensionsTests.cs" />
     <Compile Include="GraphTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VertexTests.cs" />
