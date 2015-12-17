@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\sigkey\sigkey.csproj">
-      <Project>{3943683E-34B3-4412-9D94-8F0CEEAC6B23}</Project>
+      <Project>{3943683e-34b3-4412-9d94-8f0ceeac6b23}</Project>
       <Name>sigkey</Name>
     </ProjectReference>
   </ItemGroup>
