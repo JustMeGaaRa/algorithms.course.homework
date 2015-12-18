@@ -3,8 +3,6 @@ using System.Linq;
 
 namespace Common.DataStructures
 {
-    using System;
-
     public static class GraphExtensions
     {
         public static IEnumerable<Vertex> BreadthFirstSearch(this Graph graph, Vertex startVertex, Vertex endVertex)
@@ -63,31 +61,48 @@ namespace Common.DataStructures
             return result;
         }
 
-        public static IEnumerable<Vertex> Dijkstra(this Graph graph, Vertex startVertex)
+        public static Pathway Dijkstra(this Graph graph, Vertex startVertex, Vertex endVertex)
         {
-            const int INFINITY = int.MaxValue;
-            var distnaces = graph.Vertices.ToDictionary(vertex => vertex.Label, vertex => INFINITY);
-            var path = new HashSet<Vertex>();
+            var roadmap = Dijkstra(graph, startVertex);
+            return roadmap[endVertex];
+        }
+
+        public static Roadmap Dijkstra(this Graph graph, Vertex startVertex)
+        {
+            var distnaces = graph.Vertices.ToDictionary(vertex => vertex, vertex => int.MaxValue);
+            distnaces[startVertex] = 0;
+
+            var pathVertices = new Dictionary<Vertex, Vertex>();
             var visit = graph.Vertices.ToList();
 
-            //while (visit.Count > 0)
-            //{
-            //    var shortestDistanceVertex = visit[0];
+            while (visit.Count > 0)
+            {
+                var shortestDistanceVertex = visit[0];
 
-            //    for (int i = 0; i < visit.Count; i++)
-            //    {
-            //        if (distnaces[visit[i].Label] < distnaces[shortestDistanceVertex.Label])
-            //        {
-            //            shortestDistanceVertex = visit[i];
-            //        }
-            //    }
+                foreach (Vertex vertex in visit)
+                {
+                    if (distnaces[vertex] < distnaces[shortestDistanceVertex])
+                    {
+                        shortestDistanceVertex = vertex;
+                    }
+                }
 
-            //    visit.Remove(shortestDistanceVertex);
+                visit.Remove(shortestDistanceVertex);
 
+                foreach (var outboundEdge in shortestDistanceVertex.OutboundEdges)
+                {
+                    var outboundEndVertex = outboundEdge.EndVertex;
+                    int alternativeDistance = distnaces[shortestDistanceVertex] + outboundEdge.Weight;
 
-            //}
+                    if (alternativeDistance < distnaces[outboundEndVertex])
+                    {
+                        distnaces[outboundEndVertex] = alternativeDistance;
+                        pathVertices[outboundEndVertex] = shortestDistanceVertex;
+                    }
+                }
+            }
 
-            return path;
+            return new Roadmap(pathVertices, distnaces, startVertex);
         }
     }
 }

@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CommonTests
 {
+    using System.Linq;
+
     [TestClass]
     public class GraphTests
     {
@@ -17,8 +19,8 @@ namespace CommonTests
             graph.Parse(lines);
 
             // Assert
-            Assert.AreEqual(3, graph.Vertices.Count);
-            Assert.AreEqual(3, graph.Edges.Count);
+            Assert.AreEqual(3, graph.Vertices.Count());
+            Assert.AreEqual(3, graph.Edges.Count());
         }
 
         [TestMethod]
@@ -32,8 +34,8 @@ namespace CommonTests
             graph.Parse(lines);
 
             // Assert
-            Assert.AreEqual(3, graph.Vertices.Count);
-            Assert.AreEqual(3, graph.Edges.Count);
+            Assert.AreEqual(3, graph.Vertices.Count());
+            Assert.AreEqual(3, graph.Edges.Count());
         }
     }
 }
