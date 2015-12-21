@@ -139,7 +139,7 @@ namespace Common.DataStructures
 
         private readonly IDictionary<Vertex, int> _distances;
 
-        private readonly IDictionary<Vertex, Pathway> _pathways;
+        private readonly IDictionary<Vertex, Pathway> _pathways = new Dictionary<Vertex, Pathway>();
 
         public Roadmap(IDictionary<Vertex, Vertex> roadmap, IDictionary<Vertex, int> distances, Vertex startVertex)
         {

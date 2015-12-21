@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Common.DataStructures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -154,6 +153,21 @@ namespace CommonTests
 
         #endregion
 
+        [TestMethod]
+        public void Tarjan_OnDirectlyAcyclicGraph_Test()
+        {
+            // Assign
+            var graph = CreateTestDirectlyAcyclicGraph();
+
+            // Act
+            var result = graph.Tarjan();
+            var actual = result.Select(vectex => vectex.Label).Aggregate((current, label) => current + label);
+
+            // Assert
+            var expected = "321054876";
+            Assert.AreEqual(expected, actual);
+        }
+
         private void DijkstraPathTest(string startLabel, string endLabel, string expected)
         {
             // Assign
@@ -268,6 +282,28 @@ namespace CommonTests
             graph.SetEdge(new Edge(vertexI, vertexH, 12));
             graph.SetEdge(new Edge(vertexJ, vertexH, 13));
             graph.SetEdge(new Edge(vertexJ, vertexI, 9));
+
+            return graph;
+        }
+
+        private Graph CreateTestDirectlyAcyclicGraph()
+        {
+            var graph = new Graph();
+
+            for (int i = 0; i < 9; i++)
+            {
+                graph.SetVertex(new Vertex(i.ToString()));
+            }
+
+            graph.SetEdge(new Edge(graph["0"], graph["1"], 0));
+            graph.SetEdge(new Edge(graph["1"], graph["2"], 0));
+            graph.SetEdge(new Edge(graph["1"], graph["3"], 0));
+            graph.SetEdge(new Edge(graph["2"], graph["3"], 0));
+            graph.SetEdge(new Edge(graph["4"], graph["2"], 0));
+            graph.SetEdge(new Edge(graph["4"], graph["5"], 0));
+            graph.SetEdge(new Edge(graph["6"], graph["7"], 0));
+            graph.SetEdge(new Edge(graph["7"], graph["8"], 0));
+            graph.SetEdge(new Edge(graph["6"], graph["4"], 0));
 
             return graph;
         }
