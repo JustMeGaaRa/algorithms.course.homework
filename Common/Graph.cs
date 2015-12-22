@@ -70,12 +70,9 @@ namespace Common.DataStructures
 
         public void Parse(string[] lines)
         {
-            int vectexCount = int.Parse(lines[0]);
-            int edgeCount = int.Parse(lines[1]);
-
-            for (int i = 0; i < edgeCount; i++)
+            foreach (string line in lines)
             {
-                var labels = lines[i + 2].Split(' ');
+                var labels = line.Split(' ');
                 var startLabel = labels[0];
                 var endLabel = labels[1];
                 var weight = labels.Length > 2 ? int.Parse(labels[2]) : 1;

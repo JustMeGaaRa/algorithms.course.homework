@@ -1,8 +1,8 @@
+using System;
+using System.Collections.Generic;
+
 namespace Common.DataStructures
 {
-    using System;
-    using System.Collections.Generic;
-
     public class Vertex : IEquatable<Vertex>
     {
         public Vertex(string label)

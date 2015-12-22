@@ -1,7 +1,7 @@
+using System;
+
 namespace Common.DataStructures
 {
-    using System;
-
     public class Edge : IEquatable<Edge>
     {
         public Edge(Vertex startVertex, Vertex endVertex, int weight)

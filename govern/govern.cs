@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Common.Algorithms;
 
 namespace govern
 {
@@ -39,9 +40,8 @@ namespace govern
             var lines = File.ReadAllLines(inputFileName);
             var graph = new Graph();
             graph.Parse(lines);
-
-            var result = 0;
-            File.WriteAllText(outputFileName, result.ToString());
+            var result = graph.Tarjan();
+            File.WriteAllLines(outputFileName, result.Select(x => x.Label));
         }
     }
 }

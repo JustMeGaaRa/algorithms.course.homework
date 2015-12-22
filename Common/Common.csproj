@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Arrays.cs" />
     <Compile Include="BinaryHeap.cs" />
+    <Compile Include="DisjointSet.cs" />
     <Compile Include="Edge.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="GraphExtensions.cs" />
