@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4CC91FB9-68A5-447B-B50A-9AAA52EECFF8}</ProjectGuid>
+    <ProjectGuid>{B74525BA-6F35-4BF0-8545-30267F88C202}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Discnt.Tests</RootNamespace>
-    <AssemblyName>Discnt.Tests</AssemblyName>
+    <RootNamespace>Govern.Tests</RootNamespace>
+    <AssemblyName>Govern.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -16,7 +16,6 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,13 +50,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="DiscntTests.cs" />
+    <Compile Include="GovernTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\discnt\discnt.csproj">
-      <Project>{39c33ee8-a26e-4c7a-b279-e89dbe09f8f3}</Project>
-      <Name>discnt</Name>
+    <ProjectReference Include="..\govern\govern.csproj">
+      <Project>{5e246fc4-9f42-4dc8-876d-a58d3cc0edb5}</Project>
+      <Name>govern</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
