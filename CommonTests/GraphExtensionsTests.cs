@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Common.Algorithms;
 using Common.DataStructures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -154,7 +157,7 @@ namespace CommonTests
         #endregion
 
         [TestMethod]
-        public void Tarjan_OnDirectlyAcyclicGraph_Test()
+        public void TarjansAlgorithmTest()
         {
             // Assign
             var graph = CreateTestDirectlyAcyclicGraph();
@@ -166,6 +169,26 @@ namespace CommonTests
             // Assert
             var expected = "321054876";
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void PrimsMinimumSpanningTreeTest()
+        {
+            // Assign
+            var graph = CreateTestWeightedGraph();
+            var expectedEdges = new[]
+                {
+                    graph["F", "E"], graph["F", "A"], graph["A", "B"], graph["D", "I"],
+                    graph["E", "H"], graph["E", "G"], graph["D", "C"], graph["I", "J"],
+                    graph["E", "I"]
+                };
+            var expected = new GraphExtensions.MinimumSpanTree(expectedEdges, 48);
+
+            // Act
+            var actual = graph.PrimsMinimumSpanningTree();
+
+            // Assert
+            Assert.IsTrue(MinimumSpanningTreeEquals(expected, actual));
         }
 
         private void DijkstraPathTest(string startLabel, string endLabel, string expected)
@@ -306,6 +329,26 @@ namespace CommonTests
             graph.SetEdge(new Edge(graph["6"], graph["4"], 0));
 
             return graph;
+        }
+
+        private bool MinimumSpanningTreeEquals(GraphExtensions.MinimumSpanTree x, GraphExtensions.MinimumSpanTree y)
+        {
+            if (x == null || y == null || x.Edges.Count != y.Edges.Count || x.Distance != y.Distance)
+                return false;
+
+            var thisEdgesKeys = new HashSet<Tuple<string, string>>(x.Edges.Select(key => new Tuple<string, string>(key.StartVertex.Label, key.EndVertex.Label)));
+
+            foreach (var edge in y.Edges)
+            {
+                var normalKey = new Tuple<string, string>(edge.StartVertex.Label, edge.EndVertex.Label);
+                var invertedKey = new Tuple<string, string>(edge.EndVertex.Label, edge.StartVertex.Label);
+                if (!thisEdgesKeys.Contains(normalKey) && !thisEdgesKeys.Contains(invertedKey))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

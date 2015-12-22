@@ -4,8 +4,6 @@ using System.Linq;
 
 namespace Common.DataStructures
 {
-    using System.Collections;
-
     public class Graph
     {
         private readonly Dictionary<string, Vertex> _vertices;
@@ -54,7 +52,7 @@ namespace Common.DataStructures
             }
         }
 
-        public IEnumerable<Vertex> Vertices
+        public ICollection<Vertex> Vertices
         {
             get
             {
@@ -62,7 +60,7 @@ namespace Common.DataStructures
             }
         }
 
-        public IEnumerable<Edge> Edges
+        public ICollection<Edge> Edges
         {
             get
             {
@@ -84,18 +82,18 @@ namespace Common.DataStructures
 
                 if (!_vertices.ContainsKey(startLabel))
                 {
-                    this.SetVertex(new Vertex(startLabel));
+                    SetVertex(new Vertex(startLabel));
                 }
 
                 if (!_vertices.ContainsKey(endLabel))
                 {
-                    this.SetVertex(new Vertex(endLabel));
+                    SetVertex(new Vertex(endLabel));
                 }
 
                 var startVertex = _vertices[startLabel];
                 var endVertex = _vertices[endLabel];
 
-                this.SetEdge(new Edge(startVertex, endVertex, weight));
+                SetEdge(new Edge(startVertex, endVertex, weight));
             }
         }
 
@@ -124,81 +122,12 @@ namespace Common.DataStructures
 
         private bool AddVertices(IEnumerable<Vertex> vertices)
         {
-            return vertices.Aggregate(true, (current, vertex) => current & this.SetVertex(vertex));
+            return vertices.Aggregate(true, (current, vertex) => current & SetVertex(vertex));
         }
 
         private bool AddEdges(IEnumerable<Edge> edges)
         {
-            return edges.Aggregate(true, (current, edge) => current & this.SetEdge(edge));
-        }
-    }
-
-    public class Roadmap
-    {
-        private readonly IDictionary<Vertex, Vertex> _roadmap;
-
-        private readonly IDictionary<Vertex, int> _distances;
-
-        private readonly IDictionary<Vertex, Pathway> _pathways = new Dictionary<Vertex, Pathway>();
-
-        public Roadmap(IDictionary<Vertex, Vertex> roadmap, IDictionary<Vertex, int> distances, Vertex startVertex)
-        {
-            _roadmap = roadmap;
-            _distances = distances;
-            StartVertex = startVertex;
-        }
-
-        public Pathway this[Vertex endVertex]
-        {
-            get
-            {
-                if (!_pathways.ContainsKey(endVertex))
-                {
-                    _pathways[endVertex] = ReconstructPath(endVertex);
-                }
-
-                return _pathways[endVertex];
-            }
-        }
-
-        public Vertex StartVertex { get; }
-
-        public Pathway ReconstructPath(Vertex endVertex)
-        {
-            var predcessor = _roadmap[endVertex];
-            var pathVertices = new Stack<Vertex>();
-            pathVertices.Push(endVertex);
-
-            while (predcessor != null)
-            {
-                pathVertices.Push(predcessor);
-                predcessor = _roadmap.ContainsKey(predcessor) ? _roadmap[predcessor] : null;
-            }
-
-            return new Pathway(pathVertices, _distances[endVertex]);
-        }
-    }
-
-    public class Pathway : IEnumerable<Vertex>
-    {
-        public Pathway(IEnumerable<Vertex> vertices, int distance)
-        {
-            Vertices = vertices;
-            Distance = distance;
-        }
-
-        public IEnumerable<Vertex> Vertices { get; set; }
-
-        public int Distance { get; set; }
-
-        public IEnumerator<Vertex> GetEnumerator()
-        {
-            return Vertices.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
+            return edges.Aggregate(true, (current, edge) => current & SetEdge(edge));
         }
     }
 }

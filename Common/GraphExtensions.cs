@@ -1,7 +1,10 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Common.DataStructures;
 
-namespace Common.DataStructures
+namespace Common.Algorithms
 {
     public static class GraphExtensions
     {
@@ -139,16 +142,76 @@ namespace Common.DataStructures
         /// <returns> The topologically sorted strongly connected conponents. </returns>
         public static IEnumerable<Vertex> Tarjan(this Graph graph)
         {
-            bool isDirectlyAsyclicGraph = true;
             var topologicalOrder = new List<Vertex>();
             var visitedVertices = new Dictionary<Vertex, TarjansVisitStatus>();
 
             foreach (var vertex in graph.Vertices)
             {
-                isDirectlyAsyclicGraph &= TarjanDfsRecursive(vertex, topologicalOrder, visitedVertices);
+                if (!TarjanDfsRecursive(vertex, topologicalOrder, visitedVertices))
+                {
+                    throw new NotDirectlyAcyclicGraphException();
+                }
             }
 
             return topologicalOrder;
+        }
+
+        /// <summary>
+        /// Prim's algorithm to find the minimum span tree on graph
+        /// </summary>
+        /// <param name="graph"> <see cref="Graph"/> instance. </param>
+        /// <returns> Minimum span tree containing edges and minimum distance. </returns>
+        public static MinimumSpanTree PrimsMinimumSpanningTree(this Graph graph)
+        {
+            var currentVertex = graph.Vertices.FirstOrDefault();
+            if (currentVertex == null)
+                return new MinimumSpanTree(Enumerable.Empty<Edge>().ToList(), 0);
+
+            int minimumDistance = 0;
+            var minimumSpanTree = new List<Edge>();
+            var edgesToVisit = new BinaryHeap<Edge>(BinaryHeapType.MinimumHeap, currentVertex.OutboundEdges.Count, new EdgeComparer());
+            var verticesVisited = new HashSet<Vertex>();
+
+            while (minimumSpanTree.Count < graph.Vertices.Count - 1)
+            {
+                foreach (var edge in currentVertex.OutboundEdges)
+                {
+                    edgesToVisit.Add(edge);
+                }
+
+                verticesVisited.Add(currentVertex);
+                Edge minimumEdge = null;
+
+                while (edgesToVisit.Count > 0)
+                {
+                    minimumEdge = edgesToVisit.Remove();
+                    if (verticesVisited.Contains(minimumEdge.StartVertex) != verticesVisited.Contains(minimumEdge.EndVertex))
+                        break;
+                }
+
+                if (minimumEdge == null)
+                {
+                    throw new MultipleMinimumSpanningTreesException();
+                }
+
+                minimumSpanTree.Add(minimumEdge);
+                minimumDistance += minimumEdge.Weight;
+                currentVertex = verticesVisited.Contains(minimumEdge.EndVertex)
+                                      ? minimumEdge.StartVertex
+                                      : minimumEdge.EndVertex;
+            }
+
+            return new MinimumSpanTree(minimumSpanTree, minimumDistance);
+        }
+
+        /// <summary>
+        /// Kruskal's algorithm to find the minimum span tree on graph
+        /// </summary>
+        /// <param name="graph"> <see cref="Graph"/> instance. </param>
+        /// <returns> Minimum span tree containing edges and minimum distance. </returns>
+        public static MinimumSpanTree KruskalsMinimumSpanningTree(this Graph graph)
+        {
+            return new MinimumSpanTree(Enumerable.Empty<Edge>().ToList(), 0);
         }
 
         /// <summary>
@@ -195,5 +258,123 @@ namespace Common.DataStructures
             Visited = 1,
             Resolved = 2
         }
+
+        private class EdgeComparer : IComparer<Edge>
+        {
+            public int Compare(Edge x, Edge y)
+            {
+                if (x.Weight < y.Weight)
+                {
+                    return -1;
+                }
+
+                if (x.Weight > y.Weight)
+                {
+                    return 1;
+                }
+
+                return 0;
+            }
+        }
+
+        public class Roadmap
+        {
+            private readonly IDictionary<Vertex, Vertex> _roadmap;
+
+            private readonly IDictionary<Vertex, int> _distances;
+
+            private readonly IDictionary<Vertex, Pathway> _pathways = new Dictionary<Vertex, Pathway>();
+
+            public Roadmap(IDictionary<Vertex, Vertex> roadmap, IDictionary<Vertex, int> distances, Vertex startVertex)
+            {
+                _roadmap = roadmap;
+                _distances = distances;
+                StartVertex = startVertex;
+            }
+
+            public Pathway this[Vertex endVertex]
+            {
+                get
+                {
+                    if (!_pathways.ContainsKey(endVertex))
+                    {
+                        _pathways[endVertex] = ReconstructPath(endVertex);
+                    }
+
+                    return _pathways[endVertex];
+                }
+            }
+
+            public Vertex StartVertex { get; }
+
+            public Pathway ReconstructPath(Vertex endVertex)
+            {
+                var predcessor = _roadmap[endVertex];
+                var pathVertices = new Stack<Vertex>();
+                pathVertices.Push(endVertex);
+
+                while (predcessor != null)
+                {
+                    pathVertices.Push(predcessor);
+                    predcessor = _roadmap.ContainsKey(predcessor) ? _roadmap[predcessor] : null;
+                }
+
+                return new Pathway(pathVertices.ToList(), _distances[endVertex]);
+            }
+        }
+
+        public class Pathway : IEnumerable<Vertex>
+        {
+            public Pathway(ICollection<Vertex> vertices, int distance)
+            {
+                Vertices = vertices;
+                Distance = distance;
+            }
+
+            public ICollection<Vertex> Vertices { get; set; }
+
+            public int Distance { get; set; }
+
+            public IEnumerator<Vertex> GetEnumerator()
+            {
+                return Vertices.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+        }
+
+        public class MinimumSpanTree : IEnumerable<Edge>
+        {
+            public MinimumSpanTree(ICollection<Edge> edges, int distance)
+            {
+                Edges = edges;
+                Distance = distance;
+            }
+
+            public ICollection<Edge> Edges { get; }
+
+            public int Distance { get; set; }
+
+            public IEnumerator<Edge> GetEnumerator()
+            {
+                return Edges.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+        }
+    }
+
+    public class MultipleMinimumSpanningTreesException : Exception
+    {
+    }
+
+    public class NotDirectlyAcyclicGraphException : Exception
+    {
     }
 }

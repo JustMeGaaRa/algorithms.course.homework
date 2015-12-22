@@ -4,30 +4,20 @@ using System.Collections.Generic;
 
 namespace Common.DataStructures
 {
-    public class BinaryHeap<TKey> : IEnumerable<TKey> where TKey : IComparable<TKey>
+    public class BinaryHeap<TKey> : IEnumerable<TKey>
     {
+        private readonly BinaryHeapType _heapType;
         private readonly IComparer<TKey> _comparer;
         private readonly List<TKey> _items;
 
-        public BinaryHeap(bool minimum, int capacity, IComparer<TKey> comparer)
+        public BinaryHeap(BinaryHeapType heapType, int initialCapacity, IComparer<TKey> comparer)
         {
-            _items = new List<TKey>(capacity);
-
-            if (comparer != null)
-            {
-                _comparer = comparer;
-            }
-            else if(minimum)
-            {
-                _comparer = new GreaterComparer<TKey>();
-            }
-            else
-            {
-                _comparer = new LesserComparer<TKey>();
-            }
+            _heapType = heapType;
+            _items = new List<TKey>(initialCapacity);
+            _comparer = comparer ?? Comparer<TKey>.Default;
         }
 
-        public BinaryHeap(bool minimum, int capacity) : this(minimum, capacity, null)
+        public BinaryHeap(BinaryHeapType heapType, int initialCapacity) : this(heapType, initialCapacity, null)
         {
         }
 
@@ -38,7 +28,10 @@ namespace Common.DataStructures
 
         public void Add(TKey item)
         {
+            // add item to the end
             _items.Add(item);
+
+            // then propagate it up till needed
             BubbleUp(Count - 1);
         }
 
@@ -59,20 +52,17 @@ namespace Common.DataStructures
                 throw new InvalidOperationException("Cannot remove when the heap is empty.");
             }
 
-            TKey min = _items[0];
+            TKey minimum = _items[0];
             Swap(0, Count - 1);
             _items.RemoveAt(_items.Count - 1);
             BubbleDown(0);
 
-            return min;
+            return minimum;
         }
 
         public IEnumerator<TKey> GetEnumerator()
         {
-            for (int i = 0; i < Count; i++)
-            {
-                yield return _items[i];
-            }
+            return _items.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -80,47 +70,50 @@ namespace Common.DataStructures
             return GetEnumerator();
         }
 
-        private void BubbleUp(int index)
+        private void BubbleUp(int childIndex)
         {
-            while (CompareAndSwapWithParentIfNecessary(index))
+            // swap with parent till child is better
+            while (SwapWithParentIfBetter(childIndex))
             {
-                index = GetParentIndex(index);
+                // update child index if it was swapped
+                childIndex = GetParentIndex(childIndex);
             }
         }
 
-        private void BubbleDown(int index)
+        private void BubbleDown(int parentIndex)
         {
-            if (!HasChildren(index))
+            // check if we can propagate further down
+            while (HasChildren(parentIndex))
             {
-                return;
-            }
-
-            int bestChildIndex = GetBestChildIndex(index);
-            if (CompareAndSwapWithParentIfNecessary(bestChildIndex))
-            {
-                BubbleDown(bestChildIndex);
+                // get best from child to swap with
+                int bestChildIndex = GetBestChildIndex(parentIndex);
+                if (SwapWithParentIfBetter(bestChildIndex))
+                {
+                    parentIndex = bestChildIndex;
+                }
+                else
+                {
+                    break;
+                }
             }
         }
 
-        private bool CompareAndSwapWithParentIfNecessary(int childIndex)
+        private bool SwapWithParentIfBetter(int childIndex)
         {
-            if (childIndex == 0)
+            if (childIndex > 0)
             {
-                return false;
+                // get parent index to compare it
+                int parentIndex = GetParentIndex(childIndex);
+
+                // if child index is better then swap it
+                if (GetBestIndex(parentIndex, childIndex) == childIndex)
+                {
+                    Swap(parentIndex, childIndex);
+                    return true;
+                }
             }
 
-            int parentIndex = GetParentIndex(childIndex);
-            if (GetBestIndex(parentIndex, childIndex) == childIndex)
-            {
-                Swap(parentIndex, childIndex);
-                return true;
-            }
             return false;
-        }
-
-        private int GetBestIndex(int index1, int index2)
-        {
-            return _comparer.Compare(_items[index1], _items[index2]) < 0 ? index1 : index2;
         }
 
         private int GetBestChildIndex(int parentIndex)
@@ -136,9 +129,23 @@ namespace Common.DataStructures
             return leftChildIndex;
         }
 
+        private int GetBestIndex(int index1, int index2)
+        {
+            switch (_heapType)
+            {
+                case BinaryHeapType.MinimumHeap:
+                    return _comparer.Compare(_items[index1], _items[index2]) < 0 ? index1 : index2;
+                case BinaryHeapType.MaximumHeap:
+                    return _comparer.Compare(_items[index1], _items[index2]) > 0 ? index1 : index2;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         private bool HasChildren(int index)
         {
-            return ItemExists(GetLeftChildIndex(index));
+            int leftChildIndex = GetLeftChildIndex(index);
+            return ItemExists(leftChildIndex);
         }
 
         private bool ItemExists(int index)
@@ -155,33 +162,24 @@ namespace Common.DataStructures
 
         private int GetParentIndex(int childIndex)
         {
-            return (childIndex - 1)/2;
+            return (childIndex - 1) / 2;
         }
 
         private int GetLeftChildIndex(int parentIndex)
         {
-            return 2*parentIndex + 1;
+            return 2 * parentIndex + 1;
         }
 
         private int GetRightChildIndex(int parentIndex)
         {
-            return 2*parentIndex + 2;
+            return 2 * parentIndex + 2;
         }
+    }
 
-        private class GreaterComparer<T> : IComparer<T> where T : IComparable<T>
-        {
-            public int Compare(T x, T y)
-            {
-                return x.CompareTo(y);
-            }
-        }
+    public enum BinaryHeapType
+    {
+        MinimumHeap,
 
-        private class LesserComparer<T> : IComparer<T> where T : IComparable<T>
-        {
-            public int Compare(T x, T y)
-            {
-                return x.CompareTo(y) * -1;
-            }
-        }
+        MaximumHeap
     }
 }
