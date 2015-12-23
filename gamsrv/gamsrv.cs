@@ -37,17 +37,17 @@ namespace gamsrv
         public void Run(string inputFileName, string outputFileName)
         {
             var lines = File.ReadAllLines(inputFileName);
-            int minimumLatency = FindMinimumLatency(lines);
+            long minimumLatency = FindMinimumLatency(lines);
             File.WriteAllText(outputFileName, minimumLatency.ToString());
         }
 
-        public int FindMinimumLatency(string[] lines)
+        public long FindMinimumLatency(string[] lines)
         {
             var graph = new Graph();
             graph.Parse(lines.Skip(2).ToArray());
             var clientVerticesLabels = lines[1].Split(' ');
             var clientVertices = new HashSet<Vertex>(clientVerticesLabels.Select(vertexLabel => graph[vertexLabel]));
-            int minimumLatency = -1;
+            long minimumLatency = long.MaxValue;
 
             foreach (var currentVertex in graph.Vertices.Where(vertex => !clientVertices.Contains(vertex)))
             {

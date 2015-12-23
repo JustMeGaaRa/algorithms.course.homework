@@ -68,32 +68,6 @@ namespace Common.DataStructures
             }
         }
 
-        public void Parse(string[] lines)
-        {
-            foreach (string line in lines)
-            {
-                var labels = line.Split(' ');
-                var startLabel = labels[0];
-                var endLabel = labels[1];
-                var weight = labels.Length > 2 ? int.Parse(labels[2]) : 1;
-
-                if (!_vertices.ContainsKey(startLabel))
-                {
-                    SetVertex(new Vertex(startLabel));
-                }
-
-                if (!_vertices.ContainsKey(endLabel))
-                {
-                    SetVertex(new Vertex(endLabel));
-                }
-
-                var startVertex = _vertices[startLabel];
-                var endVertex = _vertices[endLabel];
-
-                SetEdge(new Edge(startVertex, endVertex, weight));
-            }
-        }
-
         public bool SetVertex(Vertex vertex)
         {
             if (vertex == null)
@@ -115,6 +89,16 @@ namespace Common.DataStructures
             _cachedEdges = null;
 
             return true;
+        }
+
+        public bool ContainsVertex(string label)
+        {
+            return _vertices.ContainsKey(label);
+        }
+
+        public bool ContainsEdge(string startLabel, string endLabel)
+        {
+            return _edges.ContainsKey(new Tuple<string, string>(startLabel, endLabel));
         }
 
         private bool AddVertices(IEnumerable<Vertex> vertices)

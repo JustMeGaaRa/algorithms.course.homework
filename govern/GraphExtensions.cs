@@ -8,6 +8,37 @@ namespace Common.Algorithms
 {
     public static class GraphExtensions
     {
+        public static void Parse(this Graph graph, string[] lines, bool directedGraph = false)
+        {
+            foreach (string line in lines)
+            {
+                var labels = line.Split(' ');
+                var startLabel = labels[0];
+                var endLabel = labels[1];
+                var weight = labels.Length > 2 ? int.Parse(labels[2]) : 1;
+
+                if (!graph.ContainsVertex(startLabel))
+                {
+                    graph.SetVertex(new Vertex(startLabel));
+                }
+
+                if (!graph.ContainsVertex(endLabel))
+                {
+                    graph.SetVertex(new Vertex(endLabel));
+                }
+
+                var startVertex = graph[startLabel];
+                var endVertex = graph[endLabel];
+
+                graph.SetEdge(new Edge(startVertex, endVertex, weight));
+
+                if (!directedGraph)
+                {
+                    graph.SetEdge(new Edge(endVertex, startVertex, weight));
+                }
+            }
+        }
+
         /// <summary>
         /// Breadth-First-Search algorithm that traverses the graph
         /// </summary>
@@ -99,7 +130,7 @@ namespace Common.Algorithms
         /// <returns> The shortest (minimum cost) path from starting point to all other. </returns>
         public static Roadmap Dijkstra(this Graph graph, Vertex startVertex)
         {
-            var distnaces = graph.Vertices.ToDictionary(vertex => vertex, vertex => int.MaxValue);
+            var distnaces = graph.Vertices.ToDictionary(vertex => vertex, vertex => long.MaxValue);
             distnaces[startVertex] = 0;
 
             var pathVertices = new Dictionary<Vertex, Vertex>();
@@ -122,7 +153,7 @@ namespace Common.Algorithms
                 foreach (var outboundEdge in shortestDistanceVertex.OutboundEdges)
                 {
                     var outboundEndVertex = outboundEdge.EndVertex;
-                    int alternativeDistance = distnaces[shortestDistanceVertex] + outboundEdge.Weight;
+                    long alternativeDistance = distnaces[shortestDistanceVertex] + outboundEdge.Weight;
 
                     if (alternativeDistance < distnaces[outboundEndVertex])
                     {
@@ -281,11 +312,11 @@ namespace Common.Algorithms
         {
             private readonly IDictionary<Vertex, Vertex> _roadmap;
 
-            private readonly IDictionary<Vertex, int> _distances;
+            private readonly IDictionary<Vertex, long> _distances;
 
             private readonly IDictionary<Vertex, Pathway> _pathways = new Dictionary<Vertex, Pathway>();
 
-            public Roadmap(IDictionary<Vertex, Vertex> roadmap, IDictionary<Vertex, int> distances, Vertex startVertex)
+            public Roadmap(IDictionary<Vertex, Vertex> roadmap, IDictionary<Vertex, long> distances, Vertex startVertex)
             {
                 _roadmap = roadmap;
                 _distances = distances;
@@ -325,7 +356,7 @@ namespace Common.Algorithms
 
         public class Pathway : IEnumerable<Vertex>
         {
-            public Pathway(ICollection<Vertex> vertices, int distance)
+            public Pathway(ICollection<Vertex> vertices, long distance)
             {
                 Vertices = vertices;
                 Distance = distance;
@@ -333,7 +364,7 @@ namespace Common.Algorithms
 
             public ICollection<Vertex> Vertices { get; set; }
 
-            public int Distance { get; set; }
+            public long Distance { get; set; }
 
             public IEnumerator<Vertex> GetEnumerator()
             {

@@ -37,7 +37,7 @@ namespace govern
         {
             var lines = File.ReadAllLines(inputFileName);
             var graph = new Graph();
-            graph.Parse(lines);
+            graph.Parse(lines, true);
             var result = graph.Tarjan();
             File.WriteAllLines(outputFileName, result.Select(x => x.Label));
         }
