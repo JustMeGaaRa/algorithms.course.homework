@@ -41,7 +41,7 @@ namespace Govern.Tests
             var expected = expectedStrings.Aggregate((x, y) => x + Environment.NewLine + y);
 
             // Act
-            graph.Parse(lines);
+            graph.Parse(lines, true);
             var result = graph.Tarjan();
             var actual = result.Select(x => x.Label).Aggregate((x, y) => x + Environment.NewLine + y);
 
@@ -66,7 +66,7 @@ namespace Govern.Tests
             var expected = expectedStrings.Aggregate((x, y) => x + Environment.NewLine + y);
 
             // Act
-            graph.Parse(lines);
+            graph.Parse(lines, true);
             var result = graph.Tarjan();
             var actual = result.Select(x => x.Label).Aggregate((x, y) => x + Environment.NewLine + y);
 
@@ -94,7 +94,7 @@ namespace Govern.Tests
             var expected = expectedStrings.Aggregate((x, y) => x + Environment.NewLine + y);
 
             // Act
-            graph.Parse(lines);
+            graph.Parse(lines, true);
             var result = graph.Tarjan();
             var actual = result.Select(x => x.Label).Aggregate((x, y) => x + Environment.NewLine + y);
 
@@ -122,7 +122,7 @@ namespace Govern.Tests
             var expected = expectedStrings.Aggregate((x, y) => x + Environment.NewLine + y);
 
             // Act
-            graph.Parse(lines);
+            graph.Parse(lines, true);
             var result = graph.Tarjan();
             var actual = result.Select(x => x.Label).Aggregate((x, y) => x + Environment.NewLine + y);
 
@@ -148,7 +148,7 @@ namespace Govern.Tests
             var expected = expectedStrings.Aggregate((x, y) => x + Environment.NewLine + y);
 
             // Act
-            graph.Parse(lines);
+            graph.Parse(lines, true);
             var result = graph.Tarjan();
             var actual = result.Select(x => x.Label).Aggregate((x, y) => x + Environment.NewLine + y);
 
