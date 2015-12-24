@@ -11,13 +11,7 @@ namespace Common.DataStructures
             Weight = weight;
 
             StartVertex.OutboundEdges.Add(this);
-            StartVertex.InboundEdges.Add(this);
-
-            if (!StartVertex.Equals(EndVertex))
-            {
-                EndVertex.OutboundEdges.Add(this);
-                EndVertex.InboundEdges.Add(this);
-            }
+            EndVertex.InboundEdges.Add(this);
         }
 
         public Vertex StartVertex { get; }

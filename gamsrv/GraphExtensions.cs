@@ -172,21 +172,26 @@ namespace Common.Algorithms
         /// Tarjans algorithm to topologically sort the graph
         /// </summary>
         /// <param name="graph"> <see cref="Graph"/> instance. </param>
+        /// <param name="recursive"> Defines if Tarjan's algorithm should perform a recursive or stack-based search. </param>
         /// <returns> The topologically sorted strongly connected conponents. </returns>
-        public static IEnumerable<Vertex> Tarjan(this Graph graph)
+        public static IEnumerable<Vertex> Tarjan(this Graph graph, bool recursive = false)
         {
-            var topologicalOrder = new List<Vertex>();
-            var visitedVertices = new Dictionary<Vertex, TarjansVisitStatus>();
+            TarjanDepthFirstSearchDelegate tarjanDfs = recursive
+                ? new TarjanDepthFirstSearchDelegate(TarjanDfsRecursive)
+                : new TarjanDepthFirstSearchDelegate(TarjanDfsStack);
+
+            var topologicalOrderSet = new HashSet<Vertex>();
+            var visitedVertices = graph.Vertices.ToDictionary(key => key, value => TarjansVisitStatus.NotVisited);
 
             foreach (var vertex in graph.Vertices)
             {
-                if (!TarjanDfsRecursive(vertex, topologicalOrder, visitedVertices))
+                if (!tarjanDfs(vertex, topologicalOrderSet, visitedVertices))
                 {
                     throw new NotDirectlyAcyclicGraphException();
                 }
             }
 
-            return topologicalOrder;
+            return topologicalOrderSet;
         }
 
         /// <summary>
@@ -254,13 +259,8 @@ namespace Common.Algorithms
         /// <param name="topologicalOrder"> List of topologically sorted vertices so far. </param>
         /// <param name="visitedVertices"> Map of vertices status traversed so far. </param>
         /// <returns> Returns true if graph is a Directed Acyclic Graph. </returns>
-        private static bool TarjanDfsRecursive(Vertex vertex, List<Vertex> topologicalOrder, Dictionary<Vertex, TarjansVisitStatus> visitedVertices)
+        private static bool TarjanDfsRecursive(Vertex vertex, ICollection<Vertex> topologicalOrder, Dictionary<Vertex, TarjansVisitStatus> visitedVertices)
         {
-            if (!visitedVertices.ContainsKey(vertex))
-            {
-                visitedVertices.Add(vertex, TarjansVisitStatus.NotVisited);
-            }
-
             if (visitedVertices[vertex] == TarjansVisitStatus.Visited)
             {
                 return false;
@@ -281,6 +281,61 @@ namespace Common.Algorithms
 
             return true;
         }
+
+        /// <summary>
+        /// Stack-based function for vertex traversal for Tarjans algorithm
+        /// </summary>
+        /// <param name="vertex"> <see cref="Vertex"/> instance to start traversing from. </param>
+        /// <param name="topologicalOrderSet"> Set of topologically sorted vertices so far.  </param>
+        /// <param name="visitedVertices"> Map of vertices status traversed so far. </param>
+        /// <returns> Returns true if graph is a Directed Acyclic Graph. </returns>
+        private static bool TarjanDfsStack(Vertex vertex, ICollection<Vertex> topologicalOrderSet, Dictionary<Vertex, TarjansVisitStatus> visitedVertices)
+        {
+            var stack = new Stack<Vertex>();
+            stack.Push(vertex);
+
+            while (stack.Count > 0)
+            {
+                var currentVertex = stack.Pop();
+                visitedVertices[currentVertex] = TarjansVisitStatus.Visited;
+                var nextVertices = new List<Vertex>();
+
+                foreach (var nextVertex in currentVertex.OutboundEdges.Select(x => x.EndVertex))
+                {
+                    if (visitedVertices[nextVertex] == TarjansVisitStatus.NotVisited)
+                    {
+                        nextVertices.Add(nextVertex);
+                    }
+
+                    if (visitedVertices[nextVertex] == TarjansVisitStatus.Visited)
+                    {
+                        return false;
+                    }
+                }
+                
+                if (nextVertices.Count > 0)
+                {
+                    stack.Push(currentVertex);
+
+                    foreach (var nextVertex in nextVertices)
+                    {
+                        stack.Push(nextVertex);
+                    }
+                }
+                else
+                {
+                    visitedVertices[currentVertex] = TarjansVisitStatus.Resolved;
+                    topologicalOrderSet.Add(currentVertex);
+                }
+            }
+
+            return true;
+        }
+
+        private delegate bool TarjanDepthFirstSearchDelegate(
+            Vertex vertex,
+            ICollection<Vertex> topologicalOrder,
+            Dictionary<Vertex, TarjansVisitStatus> visitedVertices);
 
         /// <summary>
         /// Vertex visit status for Tarjan's algorithm
