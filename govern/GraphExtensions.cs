@@ -9,6 +9,43 @@ namespace Common.Algorithms
     public static class GraphExtensions
     {
         /// <summary>
+        /// Parses the input lines of string and fills the <see cref="Graph"/> instance
+        /// </summary>
+        /// <param name="graph"> <see cref="Graph"/> instance. </param>
+        /// <param name="lines"> Lines of strings to parse. </param>
+        /// <param name="directedGraph"> Defines if parsed edges should be threated as directed. </param>
+        public static void Parse(this Graph graph, string[] lines, bool directedGraph = false)
+        {
+            foreach (string line in lines)
+            {
+                var labels = line.Split(' ');
+                var startLabel = labels[0];
+                var endLabel = labels[1];
+                var weight = labels.Length > 2 ? int.Parse(labels[2]) : 1;
+
+                if (!graph.ContainsVertex(startLabel))
+                {
+                    graph.SetVertex(new Vertex(startLabel));
+                }
+
+                if (!graph.ContainsVertex(endLabel))
+                {
+                    graph.SetVertex(new Vertex(endLabel));
+                }
+
+                var startVertex = graph[startLabel];
+                var endVertex = graph[endLabel];
+
+                graph.SetEdge(new Edge(startVertex, endVertex, weight));
+
+                if (!directedGraph)
+                {
+                    graph.SetEdge(new Edge(endVertex, startVertex, weight));
+                }
+            }
+        }
+
+        /// <summary>
         /// Breadth-First-Search algorithm that traverses the graph
         /// </summary>
         /// <param name="graph"> <see cref="Graph"/> instance. </param>
@@ -99,61 +136,62 @@ namespace Common.Algorithms
         /// <returns> The shortest (minimum cost) path from starting point to all other. </returns>
         public static Roadmap Dijkstra(this Graph graph, Vertex startVertex)
         {
-            var distnaces = graph.Vertices.ToDictionary(vertex => vertex, vertex => int.MaxValue);
-            distnaces[startVertex] = 0;
+            var distances = graph.Vertices.ToDictionary(key => key, value => long.MaxValue);
+            distances[startVertex] = 0;
+            var distancesMinimumHeap = new BinaryHeap<VertexDistancePair>(
+                BinaryHeapType.MinimumHeap,
+                graph.Vertices.Count,
+                new VertexDistancePairComparer());
+            distancesMinimumHeap.Add(new VertexDistancePair(startVertex, 0));
 
             var pathVertices = new Dictionary<Vertex, Vertex>();
-            var visit = graph.Vertices.ToList();
 
-            while (visit.Count > 0)
+            while (distancesMinimumHeap.Count > 0)
             {
-                var shortestDistanceVertex = visit[0];
-
-                foreach (Vertex vertex in visit)
-                {
-                    if (distnaces[vertex] < distnaces[shortestDistanceVertex])
-                    {
-                        shortestDistanceVertex = vertex;
-                    }
-                }
-
-                visit.Remove(shortestDistanceVertex);
+                var shortestDistanceVertexPair = distancesMinimumHeap.Remove();
+                var shortestDistanceVertex = shortestDistanceVertexPair.Vertex;
 
                 foreach (var outboundEdge in shortestDistanceVertex.OutboundEdges)
                 {
                     var outboundEndVertex = outboundEdge.EndVertex;
-                    int alternativeDistance = distnaces[shortestDistanceVertex] + outboundEdge.Weight;
+                    long alternativeDistance = distances[shortestDistanceVertex] + outboundEdge.Weight;
 
-                    if (alternativeDistance < distnaces[outboundEndVertex])
+                    if (alternativeDistance < distances[outboundEndVertex])
                     {
-                        distnaces[outboundEndVertex] = alternativeDistance;
+                        distances[outboundEndVertex] = alternativeDistance;
                         pathVertices[outboundEndVertex] = shortestDistanceVertex;
+                        distancesMinimumHeap.Add(new VertexDistancePair(outboundEndVertex, alternativeDistance));
                     }
                 }
             }
 
-            return new Roadmap(pathVertices, distnaces, startVertex);
+            return new Roadmap(pathVertices, distances, startVertex);
         }
 
         /// <summary>
         /// Tarjans algorithm to topologically sort the graph
         /// </summary>
         /// <param name="graph"> <see cref="Graph"/> instance. </param>
+        /// <param name="recursive"> Defines if Tarjan's algorithm should perform a recursive or stack-based search. </param>
         /// <returns> The topologically sorted strongly connected conponents. </returns>
-        public static IEnumerable<Vertex> Tarjan(this Graph graph)
+        public static IEnumerable<Vertex> Tarjan(this Graph graph, bool recursive = false)
         {
-            var topologicalOrder = new List<Vertex>();
-            var visitedVertices = new Dictionary<Vertex, TarjansVisitStatus>();
+            TarjanDepthFirstSearchDelegate tarjanDfs = recursive
+                ? new TarjanDepthFirstSearchDelegate(TarjanDfsRecursive)
+                : new TarjanDepthFirstSearchDelegate(TarjanDfsStack);
+
+            var topologicalOrderSet = new HashSet<Vertex>();
+            var visitedVertices = graph.Vertices.ToDictionary(key => key, value => TarjansVisitStatus.NotVisited);
 
             foreach (var vertex in graph.Vertices)
             {
-                if (!TarjanDfsRecursive(vertex, topologicalOrder, visitedVertices))
+                if (!tarjanDfs(vertex, topologicalOrderSet, visitedVertices))
                 {
                     throw new NotDirectlyAcyclicGraphException();
                 }
             }
 
-            return topologicalOrder;
+            return topologicalOrderSet;
         }
 
         /// <summary>
@@ -221,13 +259,8 @@ namespace Common.Algorithms
         /// <param name="topologicalOrder"> List of topologically sorted vertices so far. </param>
         /// <param name="visitedVertices"> Map of vertices status traversed so far. </param>
         /// <returns> Returns true if graph is a Directed Acyclic Graph. </returns>
-        private static bool TarjanDfsRecursive(Vertex vertex, List<Vertex> topologicalOrder, Dictionary<Vertex, TarjansVisitStatus> visitedVertices)
+        private static bool TarjanDfsRecursive(Vertex vertex, ICollection<Vertex> topologicalOrder, Dictionary<Vertex, TarjansVisitStatus> visitedVertices)
         {
-            if (!visitedVertices.ContainsKey(vertex))
-            {
-                visitedVertices.Add(vertex, TarjansVisitStatus.NotVisited);
-            }
-
             if (visitedVertices[vertex] == TarjansVisitStatus.Visited)
             {
                 return false;
@@ -248,6 +281,61 @@ namespace Common.Algorithms
 
             return true;
         }
+
+        /// <summary>
+        /// Stack-based function for vertex traversal for Tarjans algorithm
+        /// </summary>
+        /// <param name="vertex"> <see cref="Vertex"/> instance to start traversing from. </param>
+        /// <param name="topologicalOrderSet"> Set of topologically sorted vertices so far.  </param>
+        /// <param name="visitedVertices"> Map of vertices status traversed so far. </param>
+        /// <returns> Returns true if graph is a Directed Acyclic Graph. </returns>
+        private static bool TarjanDfsStack(Vertex vertex, ICollection<Vertex> topologicalOrderSet, Dictionary<Vertex, TarjansVisitStatus> visitedVertices)
+        {
+            var stack = new Stack<Vertex>();
+            stack.Push(vertex);
+
+            while (stack.Count > 0)
+            {
+                var currentVertex = stack.Pop();
+                visitedVertices[currentVertex] = TarjansVisitStatus.Visited;
+                var nextVertices = new List<Vertex>();
+
+                foreach (var nextVertex in currentVertex.OutboundEdges.Select(x => x.EndVertex))
+                {
+                    if (visitedVertices[nextVertex] == TarjansVisitStatus.NotVisited)
+                    {
+                        nextVertices.Add(nextVertex);
+                    }
+
+                    if (visitedVertices[nextVertex] == TarjansVisitStatus.Visited)
+                    {
+                        return false;
+                    }
+                }
+                
+                if (nextVertices.Count > 0)
+                {
+                    stack.Push(currentVertex);
+
+                    foreach (var nextVertex in nextVertices)
+                    {
+                        stack.Push(nextVertex);
+                    }
+                }
+                else
+                {
+                    visitedVertices[currentVertex] = TarjansVisitStatus.Resolved;
+                    topologicalOrderSet.Add(currentVertex);
+                }
+            }
+
+            return true;
+        }
+
+        private delegate bool TarjanDepthFirstSearchDelegate(
+            Vertex vertex,
+            ICollection<Vertex> topologicalOrder,
+            Dictionary<Vertex, TarjansVisitStatus> visitedVertices);
 
         /// <summary>
         /// Vertex visit status for Tarjan's algorithm
@@ -277,96 +365,131 @@ namespace Common.Algorithms
             }
         }
 
-        public class Roadmap
+        private class VertexDistancePairComparer : IComparer<VertexDistancePair>
         {
-            private readonly IDictionary<Vertex, Vertex> _roadmap;
-
-            private readonly IDictionary<Vertex, int> _distances;
-
-            private readonly IDictionary<Vertex, Pathway> _pathways = new Dictionary<Vertex, Pathway>();
-
-            public Roadmap(IDictionary<Vertex, Vertex> roadmap, IDictionary<Vertex, int> distances, Vertex startVertex)
+            public int Compare(VertexDistancePair x, VertexDistancePair y)
             {
-                _roadmap = roadmap;
-                _distances = distances;
-                StartVertex = startVertex;
-            }
-
-            public Pathway this[Vertex endVertex]
-            {
-                get
+                if (x.Distance < y.Distance)
                 {
-                    if (!_pathways.ContainsKey(endVertex))
-                    {
-                        _pathways[endVertex] = ReconstructPath(endVertex);
-                    }
-
-                    return _pathways[endVertex];
-                }
-            }
-
-            public Vertex StartVertex { get; }
-
-            public Pathway ReconstructPath(Vertex endVertex)
-            {
-                var predcessor = _roadmap[endVertex];
-                var pathVertices = new Stack<Vertex>();
-                pathVertices.Push(endVertex);
-
-                while (predcessor != null)
-                {
-                    pathVertices.Push(predcessor);
-                    predcessor = _roadmap.ContainsKey(predcessor) ? _roadmap[predcessor] : null;
+                    return -1;
                 }
 
-                return new Pathway(pathVertices.ToList(), _distances[endVertex]);
+                if (x.Distance > y.Distance)
+                {
+                    return 1;
+                }
+
+                return 0;
             }
         }
 
-        public class Pathway : IEnumerable<Vertex>
+        private class VertexDistancePair
         {
-            public Pathway(ICollection<Vertex> vertices, int distance)
+            public VertexDistancePair()
             {
-                Vertices = vertices;
+            }
+
+            public VertexDistancePair(Vertex vertex, long distance)
+            {
+                Vertex = vertex;
                 Distance = distance;
             }
 
-            public ICollection<Vertex> Vertices { get; set; }
+            public Vertex Vertex { get; set; }
 
-            public int Distance { get; set; }
+            public long Distance { get; set; }
+        }
+    }
 
-            public IEnumerator<Vertex> GetEnumerator()
+    public class Roadmap
+    {
+        private readonly IDictionary<Vertex, Vertex> _roadmap;
+
+        private readonly IDictionary<Vertex, long> _distances;
+
+        private readonly IDictionary<Vertex, Pathway> _pathways = new Dictionary<Vertex, Pathway>();
+
+        public Roadmap(IDictionary<Vertex, Vertex> roadmap, IDictionary<Vertex, long> distances, Vertex startVertex)
+        {
+            _roadmap = roadmap;
+            _distances = distances;
+            StartVertex = startVertex;
+        }
+
+        public Pathway this[Vertex endVertex]
+        {
+            get
             {
-                return Vertices.GetEnumerator();
-            }
+                if (!_pathways.ContainsKey(endVertex))
+                {
+                    _pathways[endVertex] = ReconstructPath(endVertex);
+                }
 
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
+                return _pathways[endVertex];
             }
         }
 
-        public class MinimumSpanTree : IEnumerable<Edge>
+        public Vertex StartVertex { get; }
+
+        public Pathway ReconstructPath(Vertex endVertex)
         {
-            public MinimumSpanTree(ICollection<Edge> edges, int distance)
+            var predcessor = _roadmap[endVertex];
+            var pathVertices = new Stack<Vertex>();
+            pathVertices.Push(endVertex);
+
+            while (predcessor != null)
             {
-                Edges = edges;
-                Distance = distance;
+                pathVertices.Push(predcessor);
+                predcessor = _roadmap.ContainsKey(predcessor) ? _roadmap[predcessor] : null;
             }
 
-            public ICollection<Edge> Edges { get; }
+            return new Pathway(pathVertices.ToList(), _distances[endVertex]);
+        }
+    }
 
-            public int Distance { get; set; }
+    public class Pathway : IEnumerable<Vertex>
+    {
+        public Pathway(ICollection<Vertex> vertices, long distance)
+        {
+            Vertices = vertices;
+            Distance = distance;
+        }
 
-            public IEnumerator<Edge> GetEnumerator()
-            {
-                return Edges.GetEnumerator();
-            }
+        public ICollection<Vertex> Vertices { get; set; }
 
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
+        public long Distance { get; set; }
+
+        public IEnumerator<Vertex> GetEnumerator()
+        {
+            return Vertices.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+
+    public class MinimumSpanTree : IEnumerable<Edge>
+    {
+        public MinimumSpanTree(ICollection<Edge> edges, int distance)
+        {
+            Edges = edges;
+            Distance = distance;
+        }
+
+        public ICollection<Edge> Edges { get; }
+
+        public int Distance { get; set; }
+
+        public IEnumerator<Edge> GetEnumerator()
+        {
+            return Edges.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 

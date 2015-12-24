@@ -15,10 +15,8 @@ namespace CommonTests
             var edge = new Edge(vertexA, vertexB, 0);
 
             // Act
-            bool actual = vertexA.InboundEdges.Contains(edge);
-            actual &= vertexA.OutboundEdges.Contains(edge);
+            bool actual = vertexA.OutboundEdges.Contains(edge);
             actual &= vertexB.InboundEdges.Contains(edge);
-            actual &= vertexB.OutboundEdges.Contains(edge);
 
             // Assert
             bool expected = true;

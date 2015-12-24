@@ -1,10 +1,10 @@
-﻿using Common.DataStructures;
+﻿using System.Linq;
+using Common.Algorithms;
+using Common.DataStructures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CommonTests
 {
-    using System.Linq;
-
     [TestClass]
     public class GraphTests
     {
@@ -16,7 +16,7 @@ namespace CommonTests
             var graph = new Graph();
 
             // Act
-            graph.Parse(lines);
+            graph.Parse(lines, true);
 
             // Assert
             Assert.AreEqual(3, graph.Vertices.Count());
@@ -31,7 +31,7 @@ namespace CommonTests
             var graph = new Graph();
 
             // Act
-            graph.Parse(lines);
+            graph.Parse(lines, true);
 
             // Assert
             Assert.AreEqual(3, graph.Vertices.Count());

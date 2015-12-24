@@ -31,17 +31,17 @@ namespace Govern.Tests
             {
                 "birthcertificate",
                 "nationalpassport",
-                "militarycertificate",
-                "foreignpassport",
+                "bankstatement",
                 "creditcard",
                 "hotel",
-                "bankstatement",
+                "militarycertificate",
+                "foreignpassport",
                 "visa"
             };
             var expected = expectedStrings.Aggregate((x, y) => x + Environment.NewLine + y);
 
             // Act
-            graph.Parse(lines);
+            graph.Parse(lines, true);
             var result = graph.Tarjan();
             var actual = result.Select(x => x.Label).Aggregate((x, y) => x + Environment.NewLine + y);
 
@@ -66,7 +66,7 @@ namespace Govern.Tests
             var expected = expectedStrings.Aggregate((x, y) => x + Environment.NewLine + y);
 
             // Act
-            graph.Parse(lines);
+            graph.Parse(lines, true);
             var result = graph.Tarjan();
             var actual = result.Select(x => x.Label).Aggregate((x, y) => x + Environment.NewLine + y);
 
@@ -87,14 +87,14 @@ namespace Govern.Tests
             var graph = new Graph();
             var expectedStrings = new[]
             {
-                "cer09", "cer08", "cer07", "cer03",
-                "cer06", "cer05", "cer04", "cer02",
+                "cer07", "cer08", "cer09", "cer03",
+                "cer04", "cer05", "cer06", "cer02",
                 "cer01"
             };
             var expected = expectedStrings.Aggregate((x, y) => x + Environment.NewLine + y);
 
             // Act
-            graph.Parse(lines);
+            graph.Parse(lines, true);
             var result = graph.Tarjan();
             var actual = result.Select(x => x.Label).Aggregate((x, y) => x + Environment.NewLine + y);
 
@@ -115,14 +115,14 @@ namespace Govern.Tests
             var graph = new Graph();
             var expectedStrings = new[]
             {
-                "4a", "4b", "3a", "4c", "4d", "3b",
-                "4e", "4f", "3c", "4g", "4h", "3d",
+                "4b", "4a", "3a", "4d", "4c", "3b",
+                "4f", "4e", "3c", "4h", "4g", "3d",
                 "2a", "2b", "1a", "z", "y", "v", "x"
             };
             var expected = expectedStrings.Aggregate((x, y) => x + Environment.NewLine + y);
 
             // Act
-            graph.Parse(lines);
+            graph.Parse(lines, true);
             var result = graph.Tarjan();
             var actual = result.Select(x => x.Label).Aggregate((x, y) => x + Environment.NewLine + y);
 
@@ -148,7 +148,7 @@ namespace Govern.Tests
             var expected = expectedStrings.Aggregate((x, y) => x + Environment.NewLine + y);
 
             // Act
-            graph.Parse(lines);
+            graph.Parse(lines, true);
             var result = graph.Tarjan();
             var actual = result.Select(x => x.Label).Aggregate((x, y) => x + Environment.NewLine + y);
 

@@ -182,7 +182,7 @@ namespace CommonTests
                     graph["E", "H"], graph["E", "G"], graph["D", "C"], graph["I", "J"],
                     graph["E", "I"]
                 };
-            var expected = new GraphExtensions.MinimumSpanTree(expectedEdges, 48);
+            var expected = new MinimumSpanTree(expectedEdges, 48);
 
             // Act
             var actual = graph.PrimsMinimumSpanningTree();
@@ -331,7 +331,7 @@ namespace CommonTests
             return graph;
         }
 
-        private bool MinimumSpanningTreeEquals(GraphExtensions.MinimumSpanTree x, GraphExtensions.MinimumSpanTree y)
+        private bool MinimumSpanningTreeEquals(MinimumSpanTree x, MinimumSpanTree y)
         {
             if (x == null || y == null || x.Edges.Count != y.Edges.Count || x.Distance != y.Distance)
                 return false;

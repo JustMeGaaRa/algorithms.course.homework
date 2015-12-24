@@ -1,13 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Common.Algorithms;
+using Common.DataStructures;
 
 namespace govern
 {
-    using System.IO;
-
-    using Common.DataStructures;
-
     public class Govern
     {
         private static void Main(string[] args)
@@ -39,7 +37,7 @@ namespace govern
         {
             var lines = File.ReadAllLines(inputFileName);
             var graph = new Graph();
-            graph.Parse(lines);
+            graph.Parse(lines, true);
             var result = graph.Tarjan();
             File.WriteAllLines(outputFileName, result.Select(x => x.Label));
         }

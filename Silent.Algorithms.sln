@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Govern.Tests", "Govern.Tests\Govern.Tests.csproj", "{B74525BA-6F35-4BF0-8545-30267F88C202}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gamsrv", "gamsrv\gamsrv.csproj", "{929F063F-F3E0-4412-87BE-6ED5A3B3A8FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GamsrvTests", "GamsrvTests\GamsrvTests.csproj", "{1720EDD4-98A6-4B3D-846C-6B989E2D0592}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +97,14 @@ Global
 		{B74525BA-6F35-4BF0-8545-30267F88C202}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B74525BA-6F35-4BF0-8545-30267F88C202}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B74525BA-6F35-4BF0-8545-30267F88C202}.Release|Any CPU.Build.0 = Release|Any CPU
+		{929F063F-F3E0-4412-87BE-6ED5A3B3A8FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{929F063F-F3E0-4412-87BE-6ED5A3B3A8FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{929F063F-F3E0-4412-87BE-6ED5A3B3A8FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{929F063F-F3E0-4412-87BE-6ED5A3B3A8FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1720EDD4-98A6-4B3D-846C-6B989E2D0592}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1720EDD4-98A6-4B3D-846C-6B989E2D0592}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1720EDD4-98A6-4B3D-846C-6B989E2D0592}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1720EDD4-98A6-4B3D-846C-6B989E2D0592}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
