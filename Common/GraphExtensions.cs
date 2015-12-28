@@ -115,6 +115,8 @@ namespace Common.Algorithms
             return result;
         }
 
+        #region Shortest Path Finding Algorithms
+
         /// <summary>
         /// Dijkstras algorithm that traverses the graph to find shortest path
         /// </summary>
@@ -134,7 +136,7 @@ namespace Common.Algorithms
         /// <param name="graph"> <see cref="Graph"/> instance. </param>
         /// <param name="startVertex"> The start <see cref="Vertex"/> of path to calculate minimum distance for. </param>
         /// <returns> The shortest (minimum cost) path from starting point to all other. </returns>
-        public static Roadmap Dijkstra(this Graph graph, Vertex startVertex)
+        public static PathwayCollection Dijkstra(this Graph graph, Vertex startVertex)
         {
             var distances = graph.Vertices.ToDictionary(key => key, value => long.MaxValue);
             distances[startVertex] = 0;
@@ -165,8 +167,112 @@ namespace Common.Algorithms
                 }
             }
 
-            return new Roadmap(pathVertices, distances, startVertex);
+            return new PathwayCollection(pathVertices, distances, startVertex);
         }
+
+        /// <summary>
+        /// A* algorithm that traverses the graph to find shortest path between set vertices
+        /// </summary>
+        /// <param name="graph"> <see cref="Graph"/> instance. </param>
+        /// <param name="startVertex"> The start <see cref="Vertex"/> of path to calculate minimum distance for. </param>
+        /// <param name="endVertex"> The end <see cref="Vertex"/> of path to calculate minimum distance for. </param>
+        /// <returns> The shortest (minimum cost) path from starting point to ending point. </returns>
+        public static Pathway AStar(this Graph graph, Vertex startVertex, Vertex endVertex)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Bellman-Ford's algorithm for finding shortest paths in a graph and detect negative cost cycles
+        /// </summary>
+        /// <param name="graph"> <see cref="Graph"/> instance. </param>
+        /// <param name="startVertex"> The start <see cref="Vertex"/> of path to calculate minimum distance for. </param>
+        /// <returns> The shortest (minimum cost) path from starting point to all other. </returns>
+        public static PathwayCollection BellmanFord(this Graph graph, Vertex startVertex)
+        {
+            var distances = graph.Vertices.ToDictionary(key => key, value => long.MaxValue);
+            distances[startVertex] = 0;
+            var pathVertices = new Dictionary<Vertex, Vertex>();
+
+            for (int i = 0; i < graph.Vertices.Count - 1; i++)
+            {
+                foreach (var vertex in graph.Vertices)
+                {
+                    var currentDistance = distances[vertex];
+
+                    foreach (var inboundEdge in vertex.InboundEdges)
+                    {
+                        var alternativeDistance = distances[inboundEdge.StartVertex] + inboundEdge.Weight;
+                        if (alternativeDistance < currentDistance)
+                        {
+                            distances[vertex] = alternativeDistance;
+                            pathVertices[vertex] = inboundEdge.StartVertex;
+                        }
+                    }
+                }
+            }
+
+            foreach (var vertex in graph.Vertices)
+            {
+                foreach (var inboundEdge in vertex.InboundEdges)
+                {
+                    var alternativeDistance = distances[inboundEdge.StartVertex] + inboundEdge.Weight;
+                    if (alternativeDistance < distances[vertex])
+                    {
+                        throw new NegativeCostCycleException();
+                    }
+                }
+            }
+
+            return new PathwayCollection(pathVertices, distances, startVertex);
+        }
+
+        /// <summary>
+        /// Floyd–Warshall algorithm for finding shortest paths in a weighted graph with positive or negative edge weights (but with no negative cycles)
+        /// </summary>
+        /// <param name="graph"> <see cref="Graph"/> instance. </param>
+        /// <returns> The shortest (minimum cost) path from any vertexs to all other vertices. </returns>
+        public static Roadmap FloydWarshall(this Graph graph)
+        {
+            var distances = new Dictionary<Tuple<Vertex, Vertex>, long>();
+
+            foreach (var vertexI in graph.Vertices)
+            {
+                foreach (var vertexK in graph.Vertices)
+                {
+                    var key = new Tuple<Vertex, Vertex>(vertexI, vertexK);
+                    distances[key] = vertexI.Equals(vertexK) ? 0 : long.MaxValue;
+                }
+            }
+
+            foreach (var edge in graph.Edges)
+            {
+                var key = new Tuple<Vertex, Vertex>(edge.StartVertex, edge.EndVertex);
+                distances[key] = edge.Weight;
+            }
+
+            foreach (var vertexK in graph.Vertices)
+            {
+                foreach (var vertexI in graph.Vertices)
+                {
+                    foreach (var vertexJ in graph.Vertices)
+                    {
+                        var keyIJ = new Tuple<Vertex, Vertex>(vertexI, vertexJ);
+                        var keyIK = new Tuple<Vertex, Vertex>(vertexI, vertexK);
+                        var keyKJ = new Tuple<Vertex, Vertex>(vertexK, vertexJ);
+
+                        if (distances[keyIJ] > distances[keyIK] + distances[keyKJ])
+                        {
+                            distances[keyIJ] = distances[keyIK] + distances[keyKJ];
+                        }
+                    }
+                }
+            }
+
+            return new Roadmap(distances);
+        }
+
+        #endregion
 
         /// <summary>
         /// Tarjans algorithm to topologically sort the graph
@@ -193,6 +299,8 @@ namespace Common.Algorithms
 
             return topologicalOrderSet;
         }
+
+        #region Minimum Spanning Tree Algorithms
 
         /// <summary>
         /// Prim's algorithm to find the minimum span tree on graph
@@ -251,6 +359,8 @@ namespace Common.Algorithms
         {
             return new MinimumSpanTree(Enumerable.Empty<Edge>().ToList(), 0);
         }
+
+        #endregion
 
         /// <summary>
         /// Recursive function for vertex traversal for Tarjans algorithm
@@ -312,7 +422,7 @@ namespace Common.Algorithms
                         return false;
                     }
                 }
-                
+
                 if (nextVertices.Count > 0)
                 {
                     stack.Push(currentVertex);
@@ -403,13 +513,32 @@ namespace Common.Algorithms
 
     public class Roadmap
     {
+        private readonly IDictionary<Tuple<Vertex, Vertex>, long> _roadmap;
+
+        public Roadmap(IDictionary<Tuple<Vertex, Vertex>, long> roadmap)
+        {
+            _roadmap = roadmap;
+        }
+
+        public long this[Vertex startVertex, Vertex endVertex]
+        {
+            get
+            {
+                var key = new Tuple<Vertex, Vertex>(startVertex, endVertex);
+                return _roadmap[key];
+            }
+        }
+    }
+
+    public class PathwayCollection
+    {
         private readonly IDictionary<Vertex, Vertex> _roadmap;
 
         private readonly IDictionary<Vertex, long> _distances;
 
         private readonly IDictionary<Vertex, Pathway> _pathways = new Dictionary<Vertex, Pathway>();
 
-        public Roadmap(IDictionary<Vertex, Vertex> roadmap, IDictionary<Vertex, long> distances, Vertex startVertex)
+        public PathwayCollection(IDictionary<Vertex, Vertex> roadmap, IDictionary<Vertex, long> distances, Vertex startVertex)
         {
             _roadmap = roadmap;
             _distances = distances;
@@ -431,7 +560,7 @@ namespace Common.Algorithms
 
         public Vertex StartVertex { get; }
 
-        public Pathway ReconstructPath(Vertex endVertex)
+        private Pathway ReconstructPath(Vertex endVertex)
         {
             var predcessor = _roadmap[endVertex];
             var pathVertices = new Stack<Vertex>();
@@ -498,6 +627,10 @@ namespace Common.Algorithms
     }
 
     public class NotDirectlyAcyclicGraphException : Exception
+    {
+    }
+
+    public class NegativeCostCycleException : Exception
     {
     }
 }

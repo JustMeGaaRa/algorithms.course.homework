@@ -217,6 +217,8 @@ namespace CommonTests
             Assert.AreEqual(expected, actual);
         }
 
+        #region Tests setup and checks
+
         private Graph CreateTestTreeGraph()
         {
             var vertexA = new Vertex("a");
@@ -350,5 +352,7 @@ namespace CommonTests
 
             return true;
         }
+
+        #endregion
     }
 }
