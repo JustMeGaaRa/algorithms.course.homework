@@ -309,10 +309,10 @@ namespace Common.Algorithms
         /// <returns> Minimum span tree containing edges and minimum distance. </returns>
         public static MinimumSpanTree PrimsMinimumSpanningTree(this Graph graph)
         {
-            var currentVertex = graph.Vertices.FirstOrDefault();
-            if (currentVertex == null)
+            if (graph.Vertices.Count == 0 || graph.Edges.Count == 0)
                 return new MinimumSpanTree(Enumerable.Empty<Edge>().ToList(), 0);
 
+            var currentVertex = graph.Vertices.First();
             int minimumDistance = 0;
             var minimumSpanTree = new List<Edge>();
             var edgesToVisit = new BinaryHeap<Edge>(BinaryHeapType.MinimumHeap, currentVertex.OutboundEdges.Count, new EdgeComparer());
@@ -357,7 +357,41 @@ namespace Common.Algorithms
         /// <returns> Minimum span tree containing edges and minimum distance. </returns>
         public static MinimumSpanTree KruskalsMinimumSpanningTree(this Graph graph)
         {
-            return new MinimumSpanTree(Enumerable.Empty<Edge>().ToList(), 0);
+            if (graph.Vertices.Count == 0 || graph.Edges.Count == 0)
+                return new MinimumSpanTree(Enumerable.Empty<Edge>().ToList(), 0);
+
+            var minimumSpanTree = new List<Edge>();
+            var minimumDistance = 0;
+            var unionFind = new DisjointSet<Vertex>(graph.Vertices);
+            var edgesToVisit = new BinaryHeap<Edge>(BinaryHeapType.MinimumHeap, graph.Edges.Count, new EdgeComparer());
+
+            foreach (var edge in graph.Edges)
+            {
+                edgesToVisit.Add(edge);
+            }
+
+            while (minimumSpanTree.Count < graph.Vertices.Count - 1)
+            {
+                Edge minimumEdge = null;
+
+                while (edgesToVisit.Count > 0)
+                {
+                    minimumEdge = edgesToVisit.Remove();
+                    if (unionFind.Find(minimumEdge.StartVertex) != unionFind.Find(minimumEdge.EndVertex))
+                        break;
+                }
+
+                if (minimumEdge == null)
+                {
+                    throw new MultipleMinimumSpanningTreesException();
+                }
+
+                minimumSpanTree.Add(minimumEdge);
+                minimumDistance += minimumEdge.Weight;
+                unionFind.Union(minimumEdge.StartVertex, minimumEdge.EndVertex);
+            }
+
+            return new MinimumSpanTree(minimumSpanTree, minimumDistance);
         }
 
         #endregion
