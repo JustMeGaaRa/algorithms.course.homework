@@ -37,14 +37,10 @@ namespace CareerTests
             var career = new Career();
             var lines = new[]
                             {
-                                "5",
-                                "0",
-                                "1 1",
-                                "0 0 0",
-                                "1 1 1 1",
-                                "0 1 0 1 0"
+                                "1",
+                                "9999",
                             };
-            var expected = 3;
+            var expected = 9999;
 
             // Act
             var actual = career.FindMaximumExpirience(lines);

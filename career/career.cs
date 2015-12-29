@@ -43,7 +43,7 @@ namespace career
             int maximumExpirience = 0;
             int levels = int.Parse(lines[0]);
 
-            if (levels > 1)
+            if (levels > 0)
             {
                 int[][] original = new int[levels][];
                 int[][] solutions = new int[levels + 1][];
