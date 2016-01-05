@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\wchain\wchain.csproj">
-      <Project>{F6BE8871-C5FC-49D6-983E-19773DA2A1B1}</Project>
+      <Project>{f6be8871-c5fc-49d6-983e-19773da2a1b1}</Project>
       <Name>wchain</Name>
     </ProjectReference>
   </ItemGroup>

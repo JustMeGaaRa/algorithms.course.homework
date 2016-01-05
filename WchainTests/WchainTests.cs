@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using wchain;
 
 namespace WchainTests
@@ -10,6 +6,29 @@ namespace WchainTests
     [TestClass]
     public class WchainTests
     {
+        [TestMethod]
+        public void AlignStrings_Test()
+        {
+            // Assign
+            // Assign
+            var wchain = new Wchain();
+            string string1 = "bdca";
+            string string2 = "bda";
+            string expected1 = "bdca";
+            string expected2 = "bd a";
+            int expectedPenalty = 1;
+
+            // Act
+            string actual1;
+            string actual2;
+            int actualPenalty = wchain.AlignStrings(string1, string2, 1, 10, out actual1, out actual2);
+
+            // Assert
+            Assert.AreEqual(expected1, actual1);
+            Assert.AreEqual(expected2, actual2);
+            Assert.AreEqual(expectedPenalty, actualPenalty);
+        }
+
         [TestMethod]
         public void FindMaximumChainLength_Case1()
         {
