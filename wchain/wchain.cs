@@ -46,96 +46,85 @@ namespace wchain
                 return 0;
             }
 
-            var groups = GroupSortStrings(lines);
-            var keys = groups.Keys;
-            int maxLevelReached = 0;
+            var words = new HashSet<string>(lines);
+            var wordsMapping = new Dictionary<string, StringNode>();
 
-            if (keys.Count == 1)
+            for (int i = 1; i < lines.Length; i++)
             {
-                return 1;
-            }
+                string word = lines[i];
 
-            for (int levelIndex = 0; levelIndex < keys.Count - 1; levelIndex++)
-            {
-                int currentLevels = FindChainLength(groups, keys, levelIndex, 1);
-                if (maxLevelReached < currentLevels)
+                if (!wordsMapping.ContainsKey(word))
                 {
-                    maxLevelReached = currentLevels;
+                    var wordNode = new StringNode(word);
+                    wordsMapping[word] = wordNode;
                 }
-            }
 
-            return maxLevelReached;
-        }
-
-        private int FindChainLength(SortedList<int, List<string>> groups, IList<int> keys, int levelIndex, int maxLevelReached)
-        {
-            if(levelIndex + 1 == keys.Count)
-                return maxLevelReached;
-
-            int currentMaximum = 0;
-            int currentKey = keys[levelIndex];
-            int nextKey = keys[levelIndex + 1];
-            if (currentKey - nextKey == 1)
-            {
-                foreach (var currentLevelGroup in groups[currentKey])
+                for (int j = 0; j < word.Length; j++)
                 {
-                    foreach (var nextLevelGroup in groups[nextKey])
+                    var newWord = word.Remove(j, 1);
+                    if (words.Contains(newWord))
                     {
-                        if (MatchStrings(currentLevelGroup, nextLevelGroup))
+                        if (!wordsMapping.ContainsKey(newWord))
                         {
-                            int currentLevels = FindChainLength(groups, keys, levelIndex + 1, maxLevelReached + 1);
-                            if (currentMaximum < currentLevels)
-                            {
-                                currentMaximum = currentLevels;
-                            }
+                            wordsMapping.Add(newWord, new StringNode(newWord));
                         }
+                        var newWordNode = wordsMapping[newWord];
+                        wordsMapping[word].Children.Add(newWordNode);
                     }
                 }
             }
 
-            if (currentMaximum > maxLevelReached)
+            var nodes = wordsMapping.Values;
+            var visited = new HashSet<StringNode>();
+            int maxDepth = 1;
+
+            foreach (var node in nodes)
             {
-                maxLevelReached = currentMaximum;
+                visited.Clear();
+                visited.Add(node);
+                int currentDepth = ExpandNode(node, visited, 1);
+                if (currentDepth > maxDepth)
+                {
+                    maxDepth = currentDepth;
+                }
             }
 
-            return maxLevelReached;
+            return maxDepth;
         }
 
-        public class Group
+        private int ExpandNode(StringNode node, HashSet<StringNode> visited, int depth)
         {
-            public Group(string word)
+            int maxDepth = depth;
+            foreach (var child in node.Children)
+            {
+                if (!visited.Contains(child))
+                {
+                    visited.Add(child);
+                    int currentDepth = ExpandNode(child, visited, depth + 1);
+                    if (currentDepth > maxDepth)
+                    {
+                        maxDepth = currentDepth;
+                    }
+                }
+            }
+
+            return maxDepth;
+        }
+
+        private class StringNode
+        {
+            public StringNode(string word)
             {
                 Word = word;
-                SubGroups = new List<Group>();
+                Children = new List<StringNode>();
             }
 
             public string Word { get; }
 
-            public int Length { get { return Word.Length; } }
-
-            public List<Group> SubGroups { get; }
+            public List<StringNode> Children { get; }
         }
 
-        public SortedList<int, List<string>> GroupSortStrings(string[] lines)
-        {
-            var groupSorted = new SortedList<int, List<string>>(Comparer<int>.Create((x, y) => y.CompareTo(x)));
-            int count = int.Parse(lines[0]);
-
-            for (int i = 0; i < count; i++)
-            {
-                string line = lines[i + 1];
-                if (!groupSorted.ContainsKey(line.Length))
-                {
-                    groupSorted.Add(line.Length, new List<string> { line });
-                }
-                else
-                {
-                    groupSorted[line.Length].Add(line);
-                }
-            }
-
-            return groupSorted;
-        }
+        #region Sequence Alignement
 
         public int AlignStrings(
             string string1, 
@@ -213,20 +202,6 @@ namespace wchain
             }
         }
 
-        private bool MatchStrings(string string1, string string2)
-        {
-            if (string1.Length - string2.Length != 1)
-                return false;
-
-            string aligned1;
-            string aligned2;
-            int penalty = AlignStrings(string1, string2, 1, 10, out aligned1, out aligned2);
-
-            bool stringsMatch = string1.Length == aligned1.Length
-                && string1.Length == aligned2.Length
-                && penalty == 1;
-
-            return stringsMatch;
-        }
+        #endregion
     }
 }
