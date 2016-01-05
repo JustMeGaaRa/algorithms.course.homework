@@ -191,6 +191,26 @@ namespace CommonTests
             Assert.IsTrue(MinimumSpanningTreeEquals(expected, actual));
         }
 
+        [TestMethod]
+        public void KruskalsMinimumSpanningTreeTest()
+        {
+            // Assign
+            var graph = CreateTestWeightedGraph();
+            var expectedEdges = new[]
+                {
+                    graph["F", "E"], graph["F", "A"], graph["A", "B"], graph["D", "I"],
+                    graph["E", "H"], graph["E", "G"], graph["D", "C"], graph["I", "J"],
+                    graph["E", "I"]
+                };
+            var expected = new MinimumSpanTree(expectedEdges, 48);
+
+            // Act
+            var actual = graph.KruskalsMinimumSpanningTree();
+
+            // Assert
+            Assert.IsTrue(MinimumSpanningTreeEquals(expected, actual));
+        }
+
         private void DijkstraPathTest(string startLabel, string endLabel, string expected)
         {
             // Assign
@@ -216,6 +236,8 @@ namespace CommonTests
             // Assert
             Assert.AreEqual(expected, actual);
         }
+
+        #region Tests setup and checks
 
         private Graph CreateTestTreeGraph()
         {
@@ -350,5 +372,7 @@ namespace CommonTests
 
             return true;
         }
+
+        #endregion
     }
 }

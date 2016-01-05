@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{929F063F-F3E0-4412-87BE-6ED5A3B3A8FF}</ProjectGuid>
+    <ProjectGuid>{F6BE8871-C5FC-49D6-983E-19773DA2A1B1}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>gamsrv</RootNamespace>
-    <AssemblyName>gamsrv</AssemblyName>
+    <RootNamespace>wchain</RootNamespace>
+    <AssemblyName>wchain</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -42,40 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\BinaryHeap.cs">
-      <Link>BinaryHeap.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\DisjointSet.cs">
-      <Link>DisjointSet.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Edge.cs">
-      <Link>Edge.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Graph.cs">
-      <Link>Graph.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\GraphExtensions.cs">
-      <Link>GraphExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Vertex.cs">
-      <Link>Vertex.cs</Link>
-    </Compile>
-    <Compile Include="gamsrv.cs" />
+    <Compile Include="wchain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)Common\Edge.cs" "$(ProjectDir)" /Y /R
-xcopy "$(SolutionDir)Common\Vertex.cs" "$(ProjectDir)" /Y /R
-xcopy "$(SolutionDir)Common\Graph.cs" "$(ProjectDir)" /Y /R
-xcopy "$(SolutionDir)Common\GraphExtensions.cs" "$(ProjectDir)" /Y /R
-xcopy "$(SolutionDir)Common\BinaryHeap.cs" "$(ProjectDir)" /Y /R
-xcopy "$(SolutionDir)Common\DisjointSet.cs" "$(ProjectDir)" /Y /R
-</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

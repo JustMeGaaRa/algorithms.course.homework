@@ -45,6 +45,9 @@
     <Compile Include="..\Common\BinaryHeap.cs">
       <Link>BinaryHeap.cs</Link>
     </Compile>
+    <Compile Include="..\Common\DisjointSet.cs">
+      <Link>DisjointSet.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Edge.cs">
       <Link>Edge.cs</Link>
     </Compile>
@@ -70,6 +73,7 @@ xcopy "$(SolutionDir)Common\Vertex.cs" "$(ProjectDir)" /Y /R
 xcopy "$(SolutionDir)Common\Graph.cs" "$(ProjectDir)" /Y /R
 xcopy "$(SolutionDir)Common\GraphExtensions.cs" "$(ProjectDir)" /Y /R
 xcopy "$(SolutionDir)Common\BinaryHeap.cs" "$(ProjectDir)" /Y /R
+xcopy "$(SolutionDir)Common\DisjointSet.cs" "$(ProjectDir)" /Y /R
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -115,6 +115,8 @@ namespace Common.Algorithms
             return result;
         }
 
+        #region Shortest Path Finding Algorithms
+
         /// <summary>
         /// Dijkstras algorithm that traverses the graph to find shortest path
         /// </summary>
@@ -134,7 +136,7 @@ namespace Common.Algorithms
         /// <param name="graph"> <see cref="Graph"/> instance. </param>
         /// <param name="startVertex"> The start <see cref="Vertex"/> of path to calculate minimum distance for. </param>
         /// <returns> The shortest (minimum cost) path from starting point to all other. </returns>
-        public static Roadmap Dijkstra(this Graph graph, Vertex startVertex)
+        public static PathwayCollection Dijkstra(this Graph graph, Vertex startVertex)
         {
             var distances = graph.Vertices.ToDictionary(key => key, value => long.MaxValue);
             distances[startVertex] = 0;
@@ -165,29 +167,140 @@ namespace Common.Algorithms
                 }
             }
 
-            return new Roadmap(pathVertices, distances, startVertex);
+            return new PathwayCollection(pathVertices, distances, startVertex);
         }
+
+        /// <summary>
+        /// A* algorithm that traverses the graph to find shortest path between set vertices
+        /// </summary>
+        /// <param name="graph"> <see cref="Graph"/> instance. </param>
+        /// <param name="startVertex"> The start <see cref="Vertex"/> of path to calculate minimum distance for. </param>
+        /// <param name="endVertex"> The end <see cref="Vertex"/> of path to calculate minimum distance for. </param>
+        /// <returns> The shortest (minimum cost) path from starting point to ending point. </returns>
+        public static Pathway AStar(this Graph graph, Vertex startVertex, Vertex endVertex)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Bellman-Ford's algorithm for finding shortest paths in a graph and detect negative cost cycles
+        /// </summary>
+        /// <param name="graph"> <see cref="Graph"/> instance. </param>
+        /// <param name="startVertex"> The start <see cref="Vertex"/> of path to calculate minimum distance for. </param>
+        /// <returns> The shortest (minimum cost) path from starting point to all other. </returns>
+        public static PathwayCollection BellmanFord(this Graph graph, Vertex startVertex)
+        {
+            var distances = graph.Vertices.ToDictionary(key => key, value => long.MaxValue);
+            distances[startVertex] = 0;
+            var pathVertices = new Dictionary<Vertex, Vertex>();
+
+            for (int i = 0; i < graph.Vertices.Count - 1; i++)
+            {
+                foreach (var vertex in graph.Vertices)
+                {
+                    var currentDistance = distances[vertex];
+
+                    foreach (var inboundEdge in vertex.InboundEdges)
+                    {
+                        var alternativeDistance = distances[inboundEdge.StartVertex] + inboundEdge.Weight;
+                        if (alternativeDistance < currentDistance)
+                        {
+                            distances[vertex] = alternativeDistance;
+                            pathVertices[vertex] = inboundEdge.StartVertex;
+                        }
+                    }
+                }
+            }
+
+            foreach (var vertex in graph.Vertices)
+            {
+                foreach (var inboundEdge in vertex.InboundEdges)
+                {
+                    var alternativeDistance = distances[inboundEdge.StartVertex] + inboundEdge.Weight;
+                    if (alternativeDistance < distances[vertex])
+                    {
+                        throw new NegativeCostCycleException();
+                    }
+                }
+            }
+
+            return new PathwayCollection(pathVertices, distances, startVertex);
+        }
+
+        /// <summary>
+        /// Floyd–Warshall algorithm for finding shortest paths in a weighted graph with positive or negative edge weights (but with no negative cycles)
+        /// </summary>
+        /// <param name="graph"> <see cref="Graph"/> instance. </param>
+        /// <returns> The shortest (minimum cost) path from any vertexs to all other vertices. </returns>
+        public static Roadmap FloydWarshall(this Graph graph)
+        {
+            var distances = new Dictionary<Tuple<Vertex, Vertex>, long>();
+
+            foreach (var vertexI in graph.Vertices)
+            {
+                foreach (var vertexK in graph.Vertices)
+                {
+                    var key = new Tuple<Vertex, Vertex>(vertexI, vertexK);
+                    distances[key] = vertexI.Equals(vertexK) ? 0 : long.MaxValue;
+                }
+            }
+
+            foreach (var edge in graph.Edges)
+            {
+                var key = new Tuple<Vertex, Vertex>(edge.StartVertex, edge.EndVertex);
+                distances[key] = edge.Weight;
+            }
+
+            foreach (var vertexK in graph.Vertices)
+            {
+                foreach (var vertexI in graph.Vertices)
+                {
+                    foreach (var vertexJ in graph.Vertices)
+                    {
+                        var keyIJ = new Tuple<Vertex, Vertex>(vertexI, vertexJ);
+                        var keyIK = new Tuple<Vertex, Vertex>(vertexI, vertexK);
+                        var keyKJ = new Tuple<Vertex, Vertex>(vertexK, vertexJ);
+
+                        if (distances[keyIJ] > distances[keyIK] + distances[keyKJ])
+                        {
+                            distances[keyIJ] = distances[keyIK] + distances[keyKJ];
+                        }
+                    }
+                }
+            }
+
+            return new Roadmap(distances);
+        }
+
+        #endregion
 
         /// <summary>
         /// Tarjans algorithm to topologically sort the graph
         /// </summary>
         /// <param name="graph"> <see cref="Graph"/> instance. </param>
+        /// <param name="recursive"> Defines if Tarjan's algorithm should perform a recursive or stack-based search. </param>
         /// <returns> The topologically sorted strongly connected conponents. </returns>
-        public static IEnumerable<Vertex> Tarjan(this Graph graph)
+        public static IEnumerable<Vertex> Tarjan(this Graph graph, bool recursive = false)
         {
-            var topologicalOrder = new List<Vertex>();
-            var visitedVertices = new Dictionary<Vertex, TarjansVisitStatus>();
+            TarjanDepthFirstSearchDelegate tarjanDfs = recursive
+                ? new TarjanDepthFirstSearchDelegate(TarjanDfsRecursive)
+                : new TarjanDepthFirstSearchDelegate(TarjanDfsStack);
+
+            var topologicalOrderSet = new HashSet<Vertex>();
+            var visitedVertices = graph.Vertices.ToDictionary(key => key, value => TarjansVisitStatus.NotVisited);
 
             foreach (var vertex in graph.Vertices)
             {
-                if (!TarjanDfsRecursive(vertex, topologicalOrder, visitedVertices))
+                if (!tarjanDfs(vertex, topologicalOrderSet, visitedVertices))
                 {
                     throw new NotDirectlyAcyclicGraphException();
                 }
             }
 
-            return topologicalOrder;
+            return topologicalOrderSet;
         }
+
+        #region Minimum Spanning Tree Algorithms
 
         /// <summary>
         /// Prim's algorithm to find the minimum span tree on graph
@@ -196,10 +309,10 @@ namespace Common.Algorithms
         /// <returns> Minimum span tree containing edges and minimum distance. </returns>
         public static MinimumSpanTree PrimsMinimumSpanningTree(this Graph graph)
         {
-            var currentVertex = graph.Vertices.FirstOrDefault();
-            if (currentVertex == null)
+            if (graph.Vertices.Count == 0 || graph.Edges.Count == 0)
                 return new MinimumSpanTree(Enumerable.Empty<Edge>().ToList(), 0);
 
+            var currentVertex = graph.Vertices.First();
             int minimumDistance = 0;
             var minimumSpanTree = new List<Edge>();
             var edgesToVisit = new BinaryHeap<Edge>(BinaryHeapType.MinimumHeap, currentVertex.OutboundEdges.Count, new EdgeComparer());
@@ -244,8 +357,44 @@ namespace Common.Algorithms
         /// <returns> Minimum span tree containing edges and minimum distance. </returns>
         public static MinimumSpanTree KruskalsMinimumSpanningTree(this Graph graph)
         {
-            return new MinimumSpanTree(Enumerable.Empty<Edge>().ToList(), 0);
+            if (graph.Vertices.Count == 0 || graph.Edges.Count == 0)
+                return new MinimumSpanTree(Enumerable.Empty<Edge>().ToList(), 0);
+
+            var minimumSpanTree = new List<Edge>();
+            var minimumDistance = 0;
+            var unionFind = new DisjointSet<Vertex>(graph.Vertices);
+            var edgesToVisit = new BinaryHeap<Edge>(BinaryHeapType.MinimumHeap, graph.Edges.Count, new EdgeComparer());
+
+            foreach (var edge in graph.Edges)
+            {
+                edgesToVisit.Add(edge);
+            }
+
+            while (minimumSpanTree.Count < graph.Vertices.Count - 1)
+            {
+                Edge minimumEdge = null;
+
+                while (edgesToVisit.Count > 0)
+                {
+                    minimumEdge = edgesToVisit.Remove();
+                    if (unionFind.Find(minimumEdge.StartVertex) != unionFind.Find(minimumEdge.EndVertex))
+                        break;
+                }
+
+                if (minimumEdge == null)
+                {
+                    throw new MultipleMinimumSpanningTreesException();
+                }
+
+                minimumSpanTree.Add(minimumEdge);
+                minimumDistance += minimumEdge.Weight;
+                unionFind.Union(minimumEdge.StartVertex, minimumEdge.EndVertex);
+            }
+
+            return new MinimumSpanTree(minimumSpanTree, minimumDistance);
         }
+
+        #endregion
 
         /// <summary>
         /// Recursive function for vertex traversal for Tarjans algorithm
@@ -254,13 +403,8 @@ namespace Common.Algorithms
         /// <param name="topologicalOrder"> List of topologically sorted vertices so far. </param>
         /// <param name="visitedVertices"> Map of vertices status traversed so far. </param>
         /// <returns> Returns true if graph is a Directed Acyclic Graph. </returns>
-        private static bool TarjanDfsRecursive(Vertex vertex, List<Vertex> topologicalOrder, Dictionary<Vertex, TarjansVisitStatus> visitedVertices)
+        private static bool TarjanDfsRecursive(Vertex vertex, ICollection<Vertex> topologicalOrder, Dictionary<Vertex, TarjansVisitStatus> visitedVertices)
         {
-            if (!visitedVertices.ContainsKey(vertex))
-            {
-                visitedVertices.Add(vertex, TarjansVisitStatus.NotVisited);
-            }
-
             if (visitedVertices[vertex] == TarjansVisitStatus.Visited)
             {
                 return false;
@@ -281,6 +425,61 @@ namespace Common.Algorithms
 
             return true;
         }
+
+        /// <summary>
+        /// Stack-based function for vertex traversal for Tarjans algorithm
+        /// </summary>
+        /// <param name="vertex"> <see cref="Vertex"/> instance to start traversing from. </param>
+        /// <param name="topologicalOrderSet"> Set of topologically sorted vertices so far.  </param>
+        /// <param name="visitedVertices"> Map of vertices status traversed so far. </param>
+        /// <returns> Returns true if graph is a Directed Acyclic Graph. </returns>
+        private static bool TarjanDfsStack(Vertex vertex, ICollection<Vertex> topologicalOrderSet, Dictionary<Vertex, TarjansVisitStatus> visitedVertices)
+        {
+            var stack = new Stack<Vertex>();
+            stack.Push(vertex);
+
+            while (stack.Count > 0)
+            {
+                var currentVertex = stack.Pop();
+                visitedVertices[currentVertex] = TarjansVisitStatus.Visited;
+                var nextVertices = new List<Vertex>();
+
+                foreach (var nextVertex in currentVertex.OutboundEdges.Select(x => x.EndVertex))
+                {
+                    if (visitedVertices[nextVertex] == TarjansVisitStatus.NotVisited)
+                    {
+                        nextVertices.Add(nextVertex);
+                    }
+
+                    if (visitedVertices[nextVertex] == TarjansVisitStatus.Visited)
+                    {
+                        return false;
+                    }
+                }
+
+                if (nextVertices.Count > 0)
+                {
+                    stack.Push(currentVertex);
+
+                    foreach (var nextVertex in nextVertices)
+                    {
+                        stack.Push(nextVertex);
+                    }
+                }
+                else
+                {
+                    visitedVertices[currentVertex] = TarjansVisitStatus.Resolved;
+                    topologicalOrderSet.Add(currentVertex);
+                }
+            }
+
+            return true;
+        }
+
+        private delegate bool TarjanDepthFirstSearchDelegate(
+            Vertex vertex,
+            ICollection<Vertex> topologicalOrder,
+            Dictionary<Vertex, TarjansVisitStatus> visitedVertices);
 
         /// <summary>
         /// Vertex visit status for Tarjan's algorithm
@@ -348,13 +547,32 @@ namespace Common.Algorithms
 
     public class Roadmap
     {
+        private readonly IDictionary<Tuple<Vertex, Vertex>, long> _roadmap;
+
+        public Roadmap(IDictionary<Tuple<Vertex, Vertex>, long> roadmap)
+        {
+            _roadmap = roadmap;
+        }
+
+        public long this[Vertex startVertex, Vertex endVertex]
+        {
+            get
+            {
+                var key = new Tuple<Vertex, Vertex>(startVertex, endVertex);
+                return _roadmap[key];
+            }
+        }
+    }
+
+    public class PathwayCollection
+    {
         private readonly IDictionary<Vertex, Vertex> _roadmap;
 
         private readonly IDictionary<Vertex, long> _distances;
 
         private readonly IDictionary<Vertex, Pathway> _pathways = new Dictionary<Vertex, Pathway>();
 
-        public Roadmap(IDictionary<Vertex, Vertex> roadmap, IDictionary<Vertex, long> distances, Vertex startVertex)
+        public PathwayCollection(IDictionary<Vertex, Vertex> roadmap, IDictionary<Vertex, long> distances, Vertex startVertex)
         {
             _roadmap = roadmap;
             _distances = distances;
@@ -376,7 +594,7 @@ namespace Common.Algorithms
 
         public Vertex StartVertex { get; }
 
-        public Pathway ReconstructPath(Vertex endVertex)
+        private Pathway ReconstructPath(Vertex endVertex)
         {
             var predcessor = _roadmap[endVertex];
             var pathVertices = new Stack<Vertex>();
@@ -443,6 +661,10 @@ namespace Common.Algorithms
     }
 
     public class NotDirectlyAcyclicGraphException : Exception
+    {
+    }
+
+    public class NegativeCostCycleException : Exception
     {
     }
 }
