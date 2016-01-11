@@ -29,7 +29,7 @@ namespace IjonesTests
         {
             // Assign
             var ijones = new Ijones();
-            var expected = 1;
+            var expected = 2;
             int width = 10;
             int height = 1;
             var corridor = new[] { "abcdefaghi" };
