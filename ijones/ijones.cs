@@ -54,15 +54,15 @@ namespace ijones
 				return height == 1 ? 1 : 2;
 			}
 
-			var result = new BigInteger(0);
-			var solutions = new BigInteger[height, width];
+			var currentSolutions = new BigInteger[height];
+			var previousSolutions = new BigInteger[height];
 			var processingSymbolSolutions = new Dictionary<char, BigInteger>();
 			var previousSymbolSolutions = new Dictionary<char, BigInteger>();
 
 			var exitTopSymbol = corridor[0][width - 1];
 			var exitBottomSymbol = corridor[height - 1][width - 1];
-			solutions[0, width - 1] = 1;
-			solutions[height - 1, width - 1] = 1;
+			previousSolutions[0] = 1;
+			previousSolutions[height - 1] = 1;
 
 			previousSymbolSolutions[exitTopSymbol] = 0;
 			previousSymbolSolutions[exitBottomSymbol] = 0;
@@ -97,18 +97,21 @@ namespace ijones
 						processingSymbolSolutions[current] = 0;
 					}
 
-					solutions[j, i] = 0;
+					currentSolutions[j] = 0;
 
 					// if rigth symbol is not the same then we can only move forward
 					// and cannot junp over, so add solutions for right symbol 
-					if (current != previous && solutions[j, i + 1] != 0)
+					if (current != previous && previousSolutions[j] != 0)
 					{
-						solutions[j, i] += solutions[j, i + 1];
+						currentSolutions[j] += previousSolutions[j];
 					}
 
-					solutions[j, i] += previousSymbolSolutions[current];
-					processingSymbolSolutions[current] += solutions[j, i];
+					currentSolutions[j] += previousSymbolSolutions[current];
+					processingSymbolSolutions[current] += currentSolutions[j];
 				}
+
+				previousSolutions = currentSolutions;
+				currentSolutions = new BigInteger[height];
 
 				foreach (var symbolSolution in processingSymbolSolutions)
 				{
@@ -116,9 +119,11 @@ namespace ijones
 				}
 			}
 
+			var result = new BigInteger(0);
+
 			for (int i = 0; i < height; i++)
 			{
-				result += solutions[i, 0];
+				result += previousSolutions[i];
 			}
 
 			return result;
