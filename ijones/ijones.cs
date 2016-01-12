@@ -50,7 +50,7 @@ namespace ijones
             }
 
             var result = new BigInteger(0);
-            var solutions = new BigInteger[width, height];
+            var solutions = new BigInteger[height, width];
             var processingSymbolSolutions = new Dictionary<char, BigInteger>();
             var previousSymbolSolutions = new Dictionary<char, BigInteger>();
 
@@ -61,8 +61,16 @@ namespace ijones
 
             previousSymbolSolutions[exitTopSymbol] = 0;
             previousSymbolSolutions[exitBottomSymbol] = 0;
-            previousSymbolSolutions[exitTopSymbol] += 1;
-            previousSymbolSolutions[exitBottomSymbol] += 1;
+
+	        if (height == 1)
+	        {
+				previousSymbolSolutions[exitTopSymbol] += 1;
+			}
+	        else
+	        {
+				previousSymbolSolutions[exitTopSymbol] += 1;
+				previousSymbolSolutions[exitBottomSymbol] += 1;
+			}
 
             processingSymbolSolutions[exitTopSymbol] = previousSymbolSolutions[exitTopSymbol];
             processingSymbolSolutions[exitBottomSymbol] = previousSymbolSolutions[exitBottomSymbol];
@@ -79,11 +87,6 @@ namespace ijones
                         previousSymbolSolutions[current] = 0;
                     }
 
-                    if (!previousSymbolSolutions.ContainsKey(previous))
-                    {
-                        previousSymbolSolutions[previous] = 0;
-                    }
-
                     if (!processingSymbolSolutions.ContainsKey(current))
                     {
                         processingSymbolSolutions[current] = 0;
@@ -95,9 +98,6 @@ namespace ijones
                     // and cannot junp over, so add solutions for right symbol 
                     if (current != previous && solutions[j, i + 1] != 0)
                     {
-                        // TODO: add here solutions for exact symbol, not for all equal symbols
-                        // TODO: track solutions for each symbol in grid
-                        //currentSolution += previousSymbolSolutions[previous];
                         currentSolution += solutions[j, i + 1];
                     }
 
@@ -106,11 +106,17 @@ namespace ijones
                     solutions[j, i] = currentSolution;
                 }
 
-                previousSymbolSolutions = processingSymbolSolutions;
-                processingSymbolSolutions = new Dictionary<char, BigInteger>();
+	            foreach (var symbolSolution in processingSymbolSolutions)
+	            {
+					previousSymbolSolutions[symbolSolution.Key] = symbolSolution.Value;
+				}
             }
 
-            result = previousSymbolSolutions.Aggregate(result, (current, solution) => current + solution.Value);
+	        for (int i = 0; i < height; i++)
+	        {
+		        result += solutions[i, 0];
+	        }
+            
             return result;
         }
 
