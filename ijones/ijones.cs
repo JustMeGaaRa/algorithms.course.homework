@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 
 namespace ijones
@@ -49,88 +50,67 @@ namespace ijones
             }
 
             var result = new BigInteger(0);
-            var previousSolutions = new SolutionData[height];
+            var solutions = new BigInteger[width, height];
+            var processingSymbolSolutions = new Dictionary<char, BigInteger>();
+            var previousSymbolSolutions = new Dictionary<char, BigInteger>();
 
-            for (int i = 0; i < height; i++)
-            {
-                previousSolutions[i] = new SolutionData
-                {
-                    Symbol = corridor[i][width - 1],
-                    Row = i,
-                    Column = width - 1,
-                    Solutions = 0
-                };
-            }
+            var exitTopSymbol = corridor[0][width - 1];
+            var exitBottomSymbol = corridor[height - 1][width - 1];
+            solutions[0, width - 1] = 1;
+            solutions[height - 1, width - 1] = 1;
 
-            var exitTop = previousSolutions[0];
-            var exitBottom = previousSolutions[height - 1];
-            exitTop.Solutions = 1;
-            exitBottom.Solutions = 1;
+            previousSymbolSolutions[exitTopSymbol] = 0;
+            previousSymbolSolutions[exitBottomSymbol] = 0;
+            previousSymbolSolutions[exitTopSymbol] += 1;
+            previousSymbolSolutions[exitBottomSymbol] += 1;
 
-            var solutionsPerSymbol = new Dictionary<char, BigInteger>();
-            solutionsPerSymbol[exitTop.Symbol] = 0;
-            solutionsPerSymbol[exitBottom.Symbol] = 0;
-            solutionsPerSymbol[exitTop.Symbol] += exitTop.Solutions;
-            solutionsPerSymbol[exitBottom.Symbol] += exitBottom.Solutions;
+            processingSymbolSolutions[exitTopSymbol] = previousSymbolSolutions[exitTopSymbol];
+            processingSymbolSolutions[exitBottomSymbol] = previousSymbolSolutions[exitBottomSymbol];
 
             for (int i = width - 2; i >= 0; i--)
             {
-                var currentSolutions = new SolutionData[height];
-
                 for (int j = 0; j < height; j++)
                 {
-                    var solutionData = new SolutionData
+                    char current = corridor[j][i];
+                    char previous = corridor[j][i + 1];
+
+                    if (!previousSymbolSolutions.ContainsKey(current))
                     {
-                        Symbol = corridor[j][i],
-                        Row = j,
-                        Column = i,
-                        Solutions = 0
-                    };
-
-                    //// and up solutions for current symbol
-                    //if (!solutionsPerSymbol.ContainsKey(solutionData.Symbol))
-                    //{
-                    //    solutionsPerSymbol[solutionData.Symbol] = 0;
-                    //}
-
-                    //var previousValue = solutionsPerSymbol[solutionData.Symbol];
-                    //solutionsPerSymbol[solutionData.Symbol] = 0;
-
-                    // add up path count where can move from current to previous symbol
-                    for (int k = 0; k < height; k++)
-                    {
-                        if (CanMove(solutionData, previousSolutions[k]))
-                        {
-                            solutionData.Solutions += previousSolutions[k].Solutions;
-                        }
+                        previousSymbolSolutions[current] = 0;
                     }
 
-                    // if can move directly to top exit then one more path exists
-                    if (CanMoveDirectly(solutionData, exitTop))
+                    if (!previousSymbolSolutions.ContainsKey(previous))
                     {
-                        solutionData.Solutions += 1;
+                        previousSymbolSolutions[previous] = 0;
                     }
 
-                    // if can move directly to bottom exit then one more path exists
-                    if (CanMoveDirectly(solutionData, exitBottom))
+                    if (!processingSymbolSolutions.ContainsKey(current))
                     {
-                        solutionData.Solutions += 1;
+                        processingSymbolSolutions[current] = 0;
                     }
 
-                    //currentSolutions[j] = solutionData;
+                    var currentSolution = new BigInteger(0);
 
-                    //solutionsPerSymbol[solutionData.Symbol] += previousValue;
+                    // if rigth symbol is not the same then we can only move forward
+                    // and cannot junp over, so add solutions for right symbol 
+                    if (current != previous && solutions[j, i + 1] != 0)
+                    {
+                        // TODO: add here solutions for exact symbol, not for all equal symbols
+                        // TODO: track solutions for each symbol in grid
+                        //currentSolution += previousSymbolSolutions[previous];
+                        currentSolution += solutions[j, i + 1];
+                    }
+
+                    currentSolution += previousSymbolSolutions[current];
+                    processingSymbolSolutions[current] += currentSolution;
+                    solutions[j, i] = currentSolution;
                 }
 
-                // set current solutions as previous
-                previousSolutions = currentSolutions;
+                previousSymbolSolutions = processingSymbolSolutions;
+                processingSymbolSolutions = new Dictionary<char, BigInteger>();
             }
 
-            foreach (var solution in previousSolutions)
-            {
-                result += solution.Solutions;
-            }
-
+            result = previousSymbolSolutions.Aggregate(result, (current, solution) => current + solution.Value);
             return result;
         }
 
@@ -155,6 +135,11 @@ namespace ijones
             return from.Column < to.Column && to.Solutions != 0 && (from.Symbol == to.Symbol || to.Column - from.Column == 1 && from.Row == to.Row);
         }
 
+        private bool CanMove(string[] corridor, int fj, int fi, int tj, int ti)
+        {
+            return corridor[fj][fi] != corridor[tj][ti] && ti - fi == 1 && fj == tj;
+        }
+
         private bool CanMoveDirectly(SolutionData from, SolutionData to)
         {
             return to.Solutions != 0 && from.Symbol == to.Symbol && to.Column - from.Column > 1;
@@ -163,6 +148,7 @@ namespace ijones
         private string[] ReadInputFile(string inputFileName, out int width, out int height)
         {
             var lines = File.ReadLines(inputFileName).GetEnumerator();
+            lines.MoveNext();
             var sizes = lines.Current.Split(' ');
             int.TryParse(sizes[0], out width);
             int.TryParse(sizes[1], out height);

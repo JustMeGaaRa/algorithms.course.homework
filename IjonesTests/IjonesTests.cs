@@ -1,5 +1,4 @@
-﻿using System;
-using ijones;
+﻿using ijones;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IjonesTests
