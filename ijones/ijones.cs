@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+
 #if __MonoCS__
 using Mono.Math;
 #else
@@ -101,7 +102,7 @@ namespace ijones
 
 					// if rigth symbol is not the same then we can only move forward
 					// and cannot junp over, so add solutions for right symbol 
-					if (current != previous && previousSolutions[j] != 0)
+					if (current != previous && previousSolutions[j] != default(BigInteger) && previousSolutions[j] != 0)
 					{
 						currentSolutions[j] += previousSolutions[j];
 					}
