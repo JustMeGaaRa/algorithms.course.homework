@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+#if __MonoCS__
+using Mono.Math;
+#else
 using System.Numerics;
+#endif
 
 namespace ijones
 {
