@@ -21,10 +21,7 @@ namespace Common.DataStructures
         {
         }
 
-        public int Count
-        {
-            get { return _items.Count; }
-        }
+        public int Count => _items.Count;
 
         public void Add(TKey item)
         {
@@ -60,15 +57,9 @@ namespace Common.DataStructures
             return minimum;
         }
 
-        public IEnumerator<TKey> GetEnumerator()
-        {
-            return _items.GetEnumerator();
-        }
+        public IEnumerator<TKey> GetEnumerator() => _items.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         private void BubbleUp(int childIndex)
         {
@@ -148,10 +139,7 @@ namespace Common.DataStructures
             return ItemExists(leftChildIndex);
         }
 
-        private bool ItemExists(int index)
-        {
-            return index < Count;
-        }
+        private bool ItemExists(int index) => index < Count;
 
         private void Swap(int index1, int index2)
         {
@@ -160,20 +148,11 @@ namespace Common.DataStructures
             _items[index2] = temp;
         }
 
-        private int GetParentIndex(int childIndex)
-        {
-            return (childIndex - 1) / 2;
-        }
+        private int GetParentIndex(int childIndex) => (childIndex - 1) / 2;
 
-        private int GetLeftChildIndex(int parentIndex)
-        {
-            return 2 * parentIndex + 1;
-        }
+        private int GetLeftChildIndex(int parentIndex) => 2 * parentIndex + 1;
 
-        private int GetRightChildIndex(int parentIndex)
-        {
-            return 2 * parentIndex + 2;
-        }
+        private int GetRightChildIndex(int parentIndex) => 2 * parentIndex + 2;
     }
 
     public enum BinaryHeapType

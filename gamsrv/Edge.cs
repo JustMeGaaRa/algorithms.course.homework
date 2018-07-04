@@ -28,19 +28,8 @@ namespace Common.DataStructures
                    && Weight.Equals(other.Weight);
         }
 
-        public override string ToString()
-        {
-            return $"Start Vertex: {StartVertex.Label} \t------- {Weight} ------>\t End Vertex: {EndVertex.Label}";
-        }
+        public override int GetHashCode() => StartVertex.GetHashCode() ^ EndVertex.GetHashCode() ^ Weight;
 
-        public override int GetHashCode()
-        {
-            return StartVertex.GetHashCode() ^ EndVertex.GetHashCode() ^ Weight;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Edge);
-        }
+        public override bool Equals(object obj) => Equals(obj as Edge);
     }
 }

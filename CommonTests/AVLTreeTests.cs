@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using Common;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CommonTests
 {
-    [TestClass]
     public class AvlTreeTests
     {
-        [TestMethod]
+        [Fact]
         public void Insert_Integers_ShouldBeAdded()
         {
             // Arrange
@@ -25,11 +24,11 @@ namespace CommonTests
             // Assert
             int expectedCount = 6;
             int expectedHeight = 3;
-            Assert.AreEqual(expectedCount, tree.Count);
-            Assert.AreEqual(expectedHeight, tree.Height);
+            Assert.Equal(expectedCount, tree.Count);
+            Assert.Equal(expectedHeight, tree.Height);
         }
 
-        [TestMethod]
+        [Fact]
         public void Insert_SortedIntegers_ShouldBeBallanced()
         {
             // Arrange
@@ -47,26 +46,13 @@ namespace CommonTests
             // Assert
             int expectedCount = 6;
             int expectedHeight = 3;
-            Assert.AreEqual(expectedCount, tree.Count);
-            Assert.AreEqual(expectedHeight, tree.Height);
+            Assert.Equal(expectedCount, tree.Count);
+            Assert.Equal(expectedHeight, tree.Height);
         }
 
         private IComparer<int> CreateIntegerComparerFake()
         {
-            return Comparer<int>.Create((left, right) =>
-                {
-                    if (left < right)
-                    {
-                        return -1;
-                    }
-
-                    if (left > right)
-                    {
-                        return 1;
-                    }
-
-                    return 0;
-                });
+            return Comparer<int>.Create((left, right) => left < right ? -1 : (left > right ? 1 : 0));
         }
     }
 }

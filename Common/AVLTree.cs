@@ -20,10 +20,7 @@ namespace Common
 
         public int Count { get; private set; }
 
-        public int Height
-        {
-            get { return _root == null ? 0 : _root.Height; }
-        }
+        public int Height => _root == null ? 0 : _root.Height;
 
         public void Insert(TValue value)
         {
@@ -68,23 +65,12 @@ namespace Common
 
         private int GetNodeBalance(TreeNode<TValue> root)
         {
-            if (root == null)
-            {
-                return 0;
-            }
-
-            return GetNodeHeight(root.LeftBranch) - GetNodeHeight(root.RightBranch);
+            return root == null ? 0 : GetNodeHeight(root.LeftBranch) - GetNodeHeight(root.RightBranch);
         }
 
-        private bool IsRightHeavy(TreeNode<TValue> root)
-        {
-            return GetNodeBalance(root) < -1;
-        }
+        private bool IsRightHeavy(TreeNode<TValue> root) => GetNodeBalance(root) < -1;
 
-        private bool IsLeftHeavy(TreeNode<TValue> root)
-        {
-            return GetNodeBalance(root) > 1;
-        }
+        private bool IsLeftHeavy(TreeNode<TValue> root) => GetNodeBalance(root) > 1;
 
         private TreeNode<TValue> BalanceTheTree(TreeNode<TValue> parent)
         {

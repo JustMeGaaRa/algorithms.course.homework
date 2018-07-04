@@ -26,19 +26,8 @@ namespace Common.DataStructures
                    && OutboundEdges.Count.Equals(other.OutboundEdges.Count);
         }
 
-        public override string ToString()
-        {
-            return $"Label: {Label},\t Outbound Edges: {InboundEdges.Count},\t Inbound Edges: {OutboundEdges.Count}";
-        }
+        public override int GetHashCode() => Label.GetHashCode();
 
-        public override int GetHashCode()
-        {
-            return Label.GetHashCode();
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Vertex);
-        }
+        public override bool Equals(object obj) => Equals(obj as Vertex);
     }
 }

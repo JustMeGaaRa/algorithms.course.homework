@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Common.Algorithms;
 using Common.DataStructures;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CommonTests
 {
-    [TestClass]
     public class GraphExtensionsTests
     {
-        [TestMethod]
+        [Fact]
         public void BreadthFirstSearch_Test()
         {
             // Assign
@@ -22,10 +21,10 @@ namespace CommonTests
 
             // Assert
             var expected = "abcdefg";
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void DepthFirstSearch_Path_Test()
         {
             // Assign
@@ -37,60 +36,60 @@ namespace CommonTests
 
             // Assert
             var expected = "acgfbed";
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
         #region Dijkstra Path Tests
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_B_Path_Test()
         {
             DijkstraPathTest("A", "B", "AB");
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_C_Path_Test()
         {
             DijkstraPathTest("A", "C", "ABC");
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_D_Path_Test()
         {
             DijkstraPathTest("A", "D", "AFED");
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_E_Path_Test()
         {
             DijkstraPathTest("A", "E", "AFE");
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_F_Path_Test()
         {
             DijkstraPathTest("A", "F", "AF");
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_G_Path_Test()
         {
             DijkstraPathTest("A", "G", "AFG");
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_H_Path_Test()
         {
             DijkstraPathTest("A", "H", "AFEH");
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_I_Path_Test()
         {
             DijkstraPathTest("A", "I", "AFEI");
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_J_Path_Test()
         {
             DijkstraPathTest("A", "J", "AFEHJ");
@@ -100,55 +99,55 @@ namespace CommonTests
 
         #region Dijkstra Distance Path
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_B_Distance_Test()
         {
             DijkstraDistanceTest("A", "B", 3);
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_C_Distance_Test()
         {
             DijkstraDistanceTest("A", "C", 20);
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_D_Distance_Test()
         {
             DijkstraDistanceTest("A", "D", 14);
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_E_Distance_Test()
         {
             DijkstraDistanceTest("A", "E", 3);
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_F_Distance_Test()
         {
             DijkstraDistanceTest("A", "F", 2);
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_G_Distance_Test()
         {
             DijkstraDistanceTest("A", "G", 9);
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_H_Distance_Test()
         {
             DijkstraDistanceTest("A", "H", 8);
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_I_Distance_Test()
         {
             DijkstraDistanceTest("A", "I", 13);
         }
 
-        [TestMethod]
+        [Fact]
         public void Dijkstra_From_A_To_J_Distance_Test()
         {
             DijkstraDistanceTest("A", "J", 21);
@@ -156,7 +155,7 @@ namespace CommonTests
 
         #endregion
 
-        [TestMethod]
+        [Fact]
         public void TarjansAlgorithmTest()
         {
             // Assign
@@ -168,10 +167,10 @@ namespace CommonTests
 
             // Assert
             var expected = "321054876";
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void PrimsMinimumSpanningTreeTest()
         {
             // Assign
@@ -188,10 +187,10 @@ namespace CommonTests
             var actual = graph.PrimsMinimumSpanningTree();
 
             // Assert
-            Assert.IsTrue(MinimumSpanningTreeEquals(expected, actual));
+            Assert.True(MinimumSpanningTreeEquals(expected, actual));
         }
 
-        [TestMethod]
+        [Fact]
         public void KruskalsMinimumSpanningTreeTest()
         {
             // Assign
@@ -208,7 +207,7 @@ namespace CommonTests
             var actual = graph.KruskalsMinimumSpanningTree();
 
             // Assert
-            Assert.IsTrue(MinimumSpanningTreeEquals(expected, actual));
+            Assert.True(MinimumSpanningTreeEquals(expected, actual));
         }
 
         private void DijkstraPathTest(string startLabel, string endLabel, string expected)
@@ -221,7 +220,7 @@ namespace CommonTests
             var actual = result.Select(vectex => vectex.Label).Aggregate((current, label) => current + label);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
         private void DijkstraDistanceTest(string startLabel, string endLabel, int expected)
@@ -234,7 +233,7 @@ namespace CommonTests
             var actual = result.Distance;
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
         #region Tests setup and checks

@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using Common.DataStructures;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CommonTests
 {
-    [TestClass]
     public class BinaryHeapTests
     {
-        [TestMethod]
+        [Fact]
         public void Peek_ReturnsMinimumElement_Test()
         {
             // Assign
@@ -18,10 +17,10 @@ namespace CommonTests
             var actual = binaryMinimumHeap.Peek();
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void Peek_ReturnsMaximumElement_Test()
         {
             // Assign
@@ -32,10 +31,10 @@ namespace CommonTests
             var actual = binaryMinimumHeap.Peek();
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void Remove_ReturnsAndRemovesMinimumElement_Test()
         {
             // Assign
@@ -48,11 +47,11 @@ namespace CommonTests
             var actualCount = binaryMinimumHeap.Count;
 
             // Assert
-            Assert.AreEqual(expected, actual, "Expected values does not match.");
-            Assert.AreEqual(expectedCount, actualCount, "Expected count does not match.");
+            Assert.Equal(expected, actual);
+            Assert.Equal(expectedCount, actualCount);
         }
 
-        [TestMethod]
+        [Fact]
         public void Remove_ReturnsAndRemovesMaximumElement_Test()
         {
             // Assign
@@ -65,11 +64,11 @@ namespace CommonTests
             var actualCount = binaryMinimumHeap.Count;
 
             // Assert
-            Assert.AreEqual(expected, actual, "Expected values does not match.");
-            Assert.AreEqual(expectedCount, actualCount, "Expected count does not match.");
+            Assert.Equal(expected, actual);
+            Assert.Equal(expectedCount, actualCount);
         }
 
-        [TestMethod]
+        [Fact]
         public void HeapSort_ReturnsSortedAscending_Test()
         {
             // Assign
@@ -81,10 +80,10 @@ namespace CommonTests
             var actual = IsSorted(result, true);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void HeapSort_ReturnsSortedDescending_Test()
         {
             // Assign
@@ -96,10 +95,10 @@ namespace CommonTests
             var actual = IsSorted(result, false);
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void Peek_WithCustomComparerConstructorParameter_ReturnsMinimumElement_Test()
         {
             // Assign
@@ -110,10 +109,10 @@ namespace CommonTests
             var actual = binaryHeap.Peek().Value;
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void Peek_WithCustomComparerConstructorParameter_ReturnsMaximumElement_Test()
         {
             // Assign
@@ -124,7 +123,7 @@ namespace CommonTests
             var actual = binaryHeap.Peek().Value;
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
         private BinaryHeap<int> CreateBinaryHeap(BinaryHeapType heapType)

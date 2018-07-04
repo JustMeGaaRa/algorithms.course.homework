@@ -1,13 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Xunit;
+using Common.DataStructures;
 
 namespace CommonTests
 {
-    using Common.DataStructures;
-
-    [TestClass]
     public class VertexTests
     {
-        [TestMethod]
+        [Fact]
         public void Vertex_Equals_IsFalse_Test()
         {
             // Assign
@@ -19,10 +17,10 @@ namespace CommonTests
 
             // Assert
             bool expected = false;
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void Vertex_Equals_IsTrue_Test()
         {
             // Assign
@@ -34,7 +32,7 @@ namespace CommonTests
 
             // Assert
             bool expected = true;
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
     }
 }

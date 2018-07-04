@@ -16,9 +16,6 @@ namespace Common
 
         public TreeNode<TValue> RightBranch { get; set; }
 
-        public override string ToString()
-        {
-            return $"Value: {Value}, Height: {Height}";
-        }
+        public override string ToString() => $"Value: {Value}, Height: {Height}";
     }
 }

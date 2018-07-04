@@ -1,12 +1,11 @@
 ﻿using Common.DataStructures;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CommonTests
 {
-    [TestClass]
     public class EdgeTests
     {
-        [TestMethod]
+        [Fact]
         public void Ctor_WithParameters_ShouldSetItselfAsParent_Test()
         {
             // Assign
@@ -20,10 +19,10 @@ namespace CommonTests
 
             // Assert
             bool expected = true;
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void Equals_WithDifferentVertices_IsFalse_Test()
         {
             // Assign
@@ -37,10 +36,10 @@ namespace CommonTests
 
             // Assert
             bool expected = false;
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void Equals_WithCrossDifferentVertices_IsFalse_Test()
         {
             // Assign
@@ -54,10 +53,10 @@ namespace CommonTests
 
             // Assert
             bool expected = false;
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void Equals_WithDifferentWeight_IsFalse_Test()
         {
             // Assign
@@ -71,10 +70,10 @@ namespace CommonTests
 
             // Assert
             bool expected = false;
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
-        [TestMethod]
+        [Fact]
         public void Equals_WithSameVerticesAndWeight_IsTrue_Test()
         {
             // Assign
@@ -88,7 +87,7 @@ namespace CommonTests
 
             // Assert
             bool expected = true;
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
     }
 }

@@ -61,25 +61,17 @@ namespace Common
 
         private class DisjointSetGroup<T>
         {
-            private readonly List<T> _items;
-
             public DisjointSetGroup(T value)
             {
                 Id = Guid.NewGuid();
-                _items = new List<T> { value };
+                Items = new List<T> { value };
             }
 
             public Guid Id { get; }
 
-            public int Count
-            {
-                get { return _items.Count; }
-            }
+            public int Count => Items.Count;
 
-            public List<T> Items
-            {
-                get { return _items; }
-            }
+            public List<T> Items { get; private set; }
         }
     }
 }

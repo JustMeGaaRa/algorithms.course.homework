@@ -1,10 +1,9 @@
 using System.Linq;
 using Common.Algorithms;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CommonTests
 {
-    [TestClass]
     public class ArraysTests
     {
         private const string ArraysMismatchMessage = "Arrays mismatch!";
@@ -48,7 +47,7 @@ namespace CommonTests
             };
         }
 
-        [TestMethod]
+        [Fact]
         public void SelectionSort_WithInputShuffledArray_ShouldBeSorted()
         {
             // Assign
@@ -59,10 +58,10 @@ namespace CommonTests
             Arrays.SelectionSort(shuffled);
 
             // Assert
-            Assert.IsTrue(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
+            Assert.True(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
         }
 
-        [TestMethod]
+        [Fact]
         public void InsertionSort_WithInputShuffledArray_ShouldBeSorted()
         {
             // Assign
@@ -73,10 +72,10 @@ namespace CommonTests
             Arrays.InsertionSort(shuffled);
 
             // Assert
-            Assert.IsTrue(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
+            Assert.True(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
         }
 
-        [TestMethod]
+        [Fact]
         public void BubbleSort_WithInputShuffledArray_ShouldBeSorted()
         {
             // Assign
@@ -87,10 +86,10 @@ namespace CommonTests
             Arrays.BubbleSort(shuffled);
 
             // Assert
-            Assert.IsTrue(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
+            Assert.True(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
         }
 
-        [TestMethod]
+        [Fact]
         public void MergeSort_WithInputShuffledArray_ShouldBeSorted()
         {
             // Assign
@@ -101,10 +100,10 @@ namespace CommonTests
             Arrays.MergeSort(shuffled);
 
             // Assert
-            Assert.IsTrue(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
+            Assert.True(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
         }
 
-        [TestMethod]
+        [Fact]
         public void QuickSort_WithInputShuffledArray_ShouldBeSorted()
         {
             // Assign
@@ -115,7 +114,7 @@ namespace CommonTests
             Arrays.QuickSort(shuffled);
 
             // Assert
-            Assert.IsTrue(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
+            Assert.True(shuffled.SequenceEqual(sorted), ArraysMismatchMessage);
         }
     }
 }

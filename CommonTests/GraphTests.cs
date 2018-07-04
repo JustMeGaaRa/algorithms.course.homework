@@ -1,14 +1,13 @@
 ﻿using System.Linq;
 using Common.Algorithms;
 using Common.DataStructures;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace CommonTests
 {
-    [TestClass]
     public class GraphTests
     {
-        [TestMethod]
+        [Fact]
         public void Parse_WithoutWeight_ShouldParse_Test()
         {
             // Assign
@@ -19,11 +18,11 @@ namespace CommonTests
             graph.Parse(lines, true);
 
             // Assert
-            Assert.AreEqual(3, graph.Vertices.Count());
-            Assert.AreEqual(3, graph.Edges.Count());
+            Assert.Equal(3, graph.Vertices.Count());
+            Assert.Equal(3, graph.Edges.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void Parse_WithWeight_ShouldParse_Test()
         {
             // Assign
@@ -34,8 +33,8 @@ namespace CommonTests
             graph.Parse(lines, true);
 
             // Assert
-            Assert.AreEqual(3, graph.Vertices.Count());
-            Assert.AreEqual(3, graph.Edges.Count());
+            Assert.Equal(3, graph.Vertices.Count());
+            Assert.Equal(3, graph.Edges.Count());
         }
     }
 }
